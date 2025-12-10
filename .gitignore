@@ -62,7 +62,6 @@ venv/
 env/
 
 # Data & models
-data/
 datasets/
 *.tfrecord
 *.tflite
