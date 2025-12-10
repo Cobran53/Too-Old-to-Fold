@@ -48,3 +48,29 @@ Thumbs.db
 # Ionic specific
 .sass-cache/
 .cordova/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.sqlite3
+
+# Virtual env
+.venv/
+venv/
+env/
+
+# Data & models
+data/
+datasets/
+*.tfrecord
+*.tflite
+*.h5
+*.ckpt
+checkpoints/
+
+# OS / editor
+.DS_Store
+.vscode/
+
