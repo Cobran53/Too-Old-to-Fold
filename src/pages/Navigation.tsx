@@ -22,6 +22,9 @@ const Navigation: React.FC = () => {
         <IonRouterLink className="btn-get-started" routerLink="/dashboard"> 
           Dashboard Page
         </IonRouterLink>
+        <IonRouterLink className="btn-get-started" routerLink="/progress"> 
+          Progress Page
+        </IonRouterLink>
       </IonContent>
     </IonPage>
   );
