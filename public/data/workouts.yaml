@@ -1,0 +1,52 @@
+# workouts.yaml
+
+workouts:
+  - name: Long Walk In The Park
+    id: walk-park-1
+    length: 7 km
+    link_to_page: /workout/long-walk
+    link_to_image: /assets/images/walk.jpg
+    duration_minutes: 60
+    location: outside
+    category: walking
+    description: A sustained, moderate-pace walk ideal for endurance and mental clarity.
+
+  - name: Beginner Bodyweight Flow
+    id: bw-flow-a
+    length: N/A
+    link_to_page: /workout/bodyweight-flow
+    link_to_image: /assets/images/bodyweight.jpg
+    duration_minutes: 30
+    location: inside
+    category: strength
+    description: A full-body routine using only your own weight to build foundational muscle strength.
+
+  - name: Tree Pose Balance Drill
+    id: balance-tree-1
+    length: N/A
+    link_to_page: /workout/tree-pose
+    link_to_image: /assets/images/balance.jpg
+    duration_minutes: 15
+    location: inside
+    category: balance
+    description: Focused exercises to improve single-leg stability and core engagement for better fall prevention.
+
+  - name: Hill Sprints and Core
+    id: sprints-core-a
+    length: 500m (sprint)
+    link_to_page: /workout/hill-sprints
+    link_to_image: /assets/images/hills.jpg
+    duration_minutes: 45
+    location: both
+    category: strength
+    description: Short, intense bursts of uphill running paired with mat work to boost power and abdominal strength.
+
+  - name: Recovery Stroll
+    id: recovery-stroll
+    length: 2 km
+    link_to_page: /workout/recovery-stroll
+    link_to_image: /assets/images/recovery.jpg
+    duration_minutes: 25
+    location: outside
+    category: walking
+    description: A gentle, slow-paced walk designed to promote active recovery and reduce muscle soreness.
