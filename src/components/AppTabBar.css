@@ -1,0 +1,55 @@
+/* Color Palette variables for context (ensure these are globally available) */
+:root {
+    --primary-dark: #2c2f43;
+    --goal-ring-done: #f0c97d; /* Light brown/gold */
+    --font-color: #1a1a2e;
+}
+
+
+/* --- Bottom Navigation --- */
+.bottom-nav {
+    --background: var(--primary-dark);
+    height: 50px; /* Standard height for padding/style */
+    border-radius: 30px;
+    overflow: hidden; 
+    /* The clip-path ensures the rounded corners look clean on the page */
+    clip-path: inset(-10px 0 0 0); 
+    margin-bottom: 15px;
+    margin-left: 25px;
+    margin-right: 25px;
+}
+
+.nav-item {
+    color: #888;
+    --color: #888; /* Set default color for IonTabButton */
+}
+
+.nav-item ion-icon {
+    font-size: 24px;
+}
+
+.active-tab {
+    /* Style the actively selected tab to match the image */
+    --background: var(--goal-ring-done); /* Button background color */
+    color: var(--font-color); 
+    --color: var(--font-color);
+    
+    border-radius: 30px;
+    padding: 5px 10px;
+    max-width: 120px;
+    margin: 0 5px; /* Add space between buttons */
+    
+    /* Displaying icon and text side-by-side */
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+}
+
+.active-tab ion-icon {
+    margin: 0;
+}
+.active-tab .nav-label {
+    font-size: 14px;
+    margin: 0;
+}

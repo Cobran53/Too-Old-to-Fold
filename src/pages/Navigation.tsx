@@ -1,16 +1,8 @@
 import { IonContent, IonHeader, IonRouterLink, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { useHistory } from 'react-router-dom';
-import ExploreContainer from '../components/ExploreContainer';
 import './Navigation.css';
 
 const Navigation: React.FC = () => {
-  const history = useHistory();
-
-  const navigateToStandardHome = () => {
-    history.push('/standard-home');
-  };
-
   return (
     <IonPage>
       <IonHeader>
@@ -26,6 +18,12 @@ const Navigation: React.FC = () => {
         </IonHeader>
         <IonRouterLink className="btn-get-started" routerLink="/welcome"> 
           Welcome Page
+        </IonRouterLink>
+        <IonRouterLink className="btn-get-started" routerLink="/dashboard"> 
+          Dashboard Page
+        </IonRouterLink>
+        <IonRouterLink className="btn-get-started" routerLink="/progress"> 
+          Progress Page
         </IonRouterLink>
       </IonContent>
     </IonPage>

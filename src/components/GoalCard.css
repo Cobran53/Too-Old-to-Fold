@@ -1,0 +1,78 @@
+/* --- Weekly Goals --- */
+.goals-container {
+    /* IonGrid handles the flex layout */
+    padding: 0;
+}
+
+.goal-card {
+    --background: var(--card-background);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    border-radius: 15px;
+    margin: 0; /* Remove default margin */
+}
+
+.goal-content {
+    padding: 15px;
+    text-align: center;
+}
+
+.goal-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+    color: var(--font-color);
+}
+
+/* Circular Chart Styling (Same as before) */
+.circular-chart {
+    display: block;
+    max-width: 100px;
+    margin: 0 auto;
+}
+
+.circle-bg { fill: none; stroke: #eee; stroke-width: 3.8; }
+.circle-progress-done {
+    fill: none;
+    stroke: var(--goal-ring-done);
+    stroke-width: 2.8;
+    stroke-linecap: round;
+    
+}
+
+.circle-progress-todo {
+    fill: none;
+    stroke: var(--goal-ring-todo);
+    stroke-width: 2.8;
+    stroke-linecap: round;
+}
+
+.chart-text {
+    fill: var(--font-color);
+    text-anchor: middle;
+    font-weight: bold;
+}
+
+
+.value-text { font-size: 10px; }
+.min-text { font-size: 5px; color: #888; }
+
+.goal-legend {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+}
+
+.done-dot, .todo-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin: 0 4px 0 10px;
+    display: inline-block;
+}
+
+.done-dot { background-color: var(--goal-ring-done); }
+.todo-dot { background-color: var(--goal-ring-todo); }
+.goal-legend .done-dot { margin-left: 0; }
