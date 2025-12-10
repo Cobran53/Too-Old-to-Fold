@@ -1,0 +1,114 @@
+.welcome-screen {
+    margin: 0;
+    font-family: Sanchez, Arial, sans-serif; /* Fallback font */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #333; /* Dark background for the outside area */
+
+}
+
+.welcome-screen {
+    position: relative;
+    width: 375px; /* Typical mobile width for demonstration */
+    height: 812px; /* Typical mobile height for demonstration */
+    max-width: 100vw;
+    max-height: 100vh;
+    overflow: hidden;
+    color: white;
+    text-align: center;
+    border-radius: 20px; /* Rounded corners for the screen container */
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.background-image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('welcome_background.jpg'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    /* Apply a dark, sepia-toned overlay similar to the image */
+    background-color: rgba(61, 44, 27, 0.6); /* Dark brown/sepia tone */
+    background-blend-mode: multiply;
+    filter: brightness(0.9) contrast(1.1) grayscale(0.2); /* Adjust for visual effect */
+    z-index: 1;
+}
+
+.content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 0 20px 120px 20px; /* Padding for bottom content */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 10; /* Ensure content is above the overlay */
+}
+
+/* Icon Styling */
+.running-icon {
+    font-size: 50px;
+    margin-bottom: 20px;
+    color: #FFF5DC; 
+    /* Add a subtle animation/glow if desired, but keeping it simple here */
+}
+
+/* Title Styling */
+.welcome-title {
+    font-size: 45px;
+    margin: 0 0 30px 0;
+    line-height: 1.2;
+    color: #FFF5DC;
+}
+
+/* Get Started Button */
+.btn-get-started {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80%; /* Width of the button */
+    max-width: 300px;
+    padding: 25px 30px;
+    border: none;
+    border-radius: 8px;
+    background-color: #2b395d; /* Dark blue background */
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 600;
+    transition: background-color 0.3s;
+    margin-bottom: 30px;
+}
+
+.btn-get-started:hover {
+    background-color: #3a4a70;
+}
+
+.btn-get-started .fas {
+    margin-left: 10px;
+}
+
+/* Sign In Prompt */
+.sign-in-prompt {
+    font-size: 14px;
+    color: #c9c9c9;
+    margin: 0;
+}
+
+.sign-in-link {
+    color: #f0c97d; /* Lighter, contrasting color for the link */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.sign-in-link:hover {
+    color: #ffffff;
+}
