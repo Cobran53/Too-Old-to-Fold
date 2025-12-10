@@ -1,0 +1,137 @@
+/* Color Palette */
+:root {
+    --primary-dark: #2c2f43;
+    --primary-blue: #455a73;
+    --active-day: #2b395d;
+    --card-background: #ffffff;
+    --goal-ring-done: #f0c97d; /* Light brown/gold */
+    --goal-ring-todo: #c3d9e8; /* Light blue/grey */
+    --font-color: #1a1a2e;
+    
+}
+
+/* --- Ionic Component Overrides & Page Layout --- */
+.dashboard-page {
+    /* Set the background of the page content */
+    --ion-background-color: #e8e8e8;
+    width: 375px; /* Typical mobile width for demonstration */
+    height: 812px; /* Typical mobile height for demonstration */
+    max-width: 100vw;
+    max-height: 100vh;
+    overflow: hidden;
+    font-family: 'Sanchez', Arial, sans-serif !important; /* Fallback font */
+    
+}
+
+ion-app {   
+  font-family: 'Sanchez', Arial, sans-serif !important;
+  --ion-default-font: 'Sanchez', Arial, sans-serif !important;
+}
+
+.dashboard-content {
+    /* Remove padding to control spacing manually */
+    --padding-start: 20px;
+    --padding-end: 20px;
+    --padding-top: 0;
+    --padding-bottom: 0;
+}
+
+.ion-no-border {
+    /* Removes the standard Ionic header border */
+    --border-width: 0 !important;
+}
+
+/* Header & Settings */
+ion-toolbar {
+    --background: transparent;
+    --padding-top: 10px;
+}
+
+.month-title {
+    font-size: 20px;
+    color: var(--font-color);
+    padding-left: 20px;
+}
+
+.settings-icon {
+    font-size: 24px;
+    color: var(--primary-dark);
+    padding-right: 25px;
+}
+
+/* --- Date Picker --- */
+.date-picker-section {
+    margin-bottom: 20px;
+}
+
+.date-picker {
+    display: flex;
+    overflow-x: scroll;
+    padding: 10px 0;
+    gap: 10px;
+    /* Hide scrollbar */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.date-picker::-webkit-scrollbar {
+    display: none;
+}
+
+.day-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 5px;
+    min-width: 48px;
+    height: 65px;
+    border-radius: 12px;
+    font-weight: 500;
+    color: var(--font-color);
+    flex-shrink: 0;
+    transition: background-color 0.2s;
+}
+
+.date-number {
+    font-size: 20px;
+    font-weight: 700;
+}
+.day-letter {
+    font-size: 14px;
+}
+
+.day-card.inactive {
+    background-color: #C2986D;
+}
+
+.day-card.active {
+    background-color: var(--active-day);
+    color: var(--text-light, white);
+}
+
+.date-dots {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #ccc;
+    margin: 0 3px;
+}
+
+.dot.active {
+    background-color: var(--active-day);
+}
+
+/* --- Today's Plan --- */
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--font-color);
+    margin: 20px 0 15px 0;
+}

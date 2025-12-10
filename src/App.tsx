@@ -1,9 +1,10 @@
 import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
+import { IonApp, IonRouterOutlet, IonTabs, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Navigation from './pages/Navigation';
 import Welcome from './pages/Welcome';
 import Dashboard from './pages/Dashboard';
+import TrainingListPage from './pages/TrainingListPage';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -43,20 +44,25 @@ setupIonicReact();
 const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
-      <IonRouterOutlet>
-        <Route exact path="/navigation">
-          <Navigation />
-        </Route>
-        <Route exact path="/">
-          <Redirect to="/navigation" />
-        </Route>
-        <Route exact path="/welcome">
-          <Welcome />
-        </Route>
-        <Route exact path="/dashboard">
-          <Dashboard />
-        </Route>  
-      </IonRouterOutlet>
+      <IonTabs>
+        <IonRouterOutlet>
+          <Route exact path="/navigation">
+            <Navigation />
+          </Route>
+          <Route exact path="/">
+            <Redirect to="/navigation" />
+          </Route>
+          <Route exact path="/welcome">
+            <Welcome />
+          </Route>
+          <Route exact path="/dashboard">
+            <Dashboard />
+          </Route>  
+          <Route exact path="/training-list">
+            <TrainingListPage />
+          </Route>  
+        </IonRouterOutlet>
+      </IonTabs>
     </IonReactRouter>
   </IonApp>
 );
