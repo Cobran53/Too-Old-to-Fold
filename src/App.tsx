@@ -5,6 +5,7 @@ import Navigation from './pages/Navigation';
 import Welcome from './pages/Welcome';
 import Dashboard from './pages/Dashboard';
 import TrainingListPage from './pages/TrainingListPage';
+import Progress from './pages/Progress';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -60,7 +61,10 @@ const App: React.FC = () => (
           </Route>  
           <Route exact path="/training-list">
             <TrainingListPage />
-          </Route>  
+          </Route> 
+          <Route exact path="/progress">
+            <Progress />
+          </Route>
         </IonRouterOutlet>
       </IonTabs>
     </IonReactRouter>

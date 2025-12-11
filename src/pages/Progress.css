@@ -1,0 +1,276 @@
+/* Define custom colors */
+:root {
+  --dark-blue: #1c2b4a;
+  --light-beige: #b19371;
+  --background-color: #f7f7f7;
+}
+
+.full-page {
+  width: 375px; /* Typical mobile width for demonstration */
+  height: 812px; /* Typical mobile height for demonstration */
+  max-width: 100vw;
+  max-height: 100vh;
+  overflow: hidden;
+  font-family: 'Sanchez', Arial, sans-serif !important;     
+}
+
+/* Page Background */
+ion-content {
+  --background: var(--background-color);
+  padding-bottom: 0 !important;
+  
+}
+
+/* Header Styling */
+ion-toolbar {
+  --background: var(--background-color);
+  --color: #000;
+}
+
+ion-title {
+  font-weight: 500;
+  font-size: 1.2rem;
+}
+
+/* --- Section Headers --- */
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1.5rem 0 1rem 0;
+}
+
+.sectionHeader h2 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0;
+  color: #000;
+}
+
+.sectionHeader a {
+  color: #999;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+/* Weekly Select Button */
+.weeklySelect {
+  --padding-start: 10px;
+  --padding-end: 10px;
+  --padding-top: 5px;
+  --padding-bottom: 5px;
+  --background: var(--dark-blue);
+  color: #fff;
+  border-radius: 10px;
+  max-width: fit-content;
+  font-size: 0.8rem;
+  text-transform: capitalize; /* Fix for Ionic default casing */
+}
+
+/* --- 1. Today's Target Progress Card --- */
+.progressCard {
+  background: #fff;
+  border-radius: 15px;
+  padding: 1.2rem 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.progressHeader h2 {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.addIcon {
+  font-size: 1.5rem;
+  color: #000;
+}
+
+.progressDetails {
+  display: flex;
+  justify-content: space-around;
+}
+
+.progressItem {
+  text-align: center;
+}
+
+.progressItem .value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #000;
+  margin: 0 0 5px 0;
+}
+
+.progressItem .label {
+  font-size: 0.8rem;
+  color: #666;
+  margin: 0;
+}
+
+/* --- 2. Activity Progress Bar Chart --- */
+.barChartCard {
+  background: #fff;
+  border-radius: 15px;
+  padding: 1.5rem 1rem 1rem 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.barChartContainer {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  height: 150px;
+  width: 100%;
+  border-bottom: 1px solid #eee;
+}
+
+.barColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  flex-grow: 1;
+  margin: 0 3px;
+}
+
+.bar {
+  width: 60%;
+  min-height: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.barDark {
+  background: var(--dark-blue);
+}
+
+.barLight {
+  background: var(--light-beige);
+}
+
+.dayLabel {
+  margin-top: 5px;
+  font-size: 0.75rem;
+  color: #999;
+}
+
+/* --- 3. Latest Activity Items --- */
+.activityItem {
+  background: #fff;
+  border-radius: 15px;
+  padding: 1rem;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.activityIconBox {
+  width: 45px;
+  height: 45px;
+  border-radius: 10px;
+  background: #eef2f8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 15px;
+}
+
+.activityIconBox.balanceIconBox {
+  background: #fdf5ec;
+}
+
+.activityIconBox ion-icon {
+  font-size: 1.3rem;
+}
+
+.iconDark {
+  color: var(--dark-blue);
+}
+.iconLight {
+  color: var(--light-beige);
+}
+
+.activityDetails {
+  flex-grow: 1;
+}
+
+.activityDetails h3 {
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin: 0 0 3px 0;
+  color: #000;
+}
+.activityDetails p {
+  font-size: 0.8rem;
+  color: #999;
+  margin: 0;
+}
+
+.moreIcon {
+  font-size: 1.2rem;
+  color: #ccc;
+}
+
+/* --- 4. Custom Tab Bar (Footer) --- */
+.tabBarContainer {
+  background-color: #fff;
+  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 70px;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.tabButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  flex: 1;
+  font-size: 1.5rem;
+  padding: 0;
+}
+
+.tabButton p {
+  font-size: 0.7rem;
+  margin-top: 0;
+}
+
+.activeTab {
+  background-color: var(--dark-blue);
+  color: #fff;
+  height: 100%;
+  border-radius: 15px;
+  max-width: 140px;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding: 0 20px;
+}
+
+.activeTab ion-icon {
+  font-size: 1.2rem;
+  margin-right: 8px;
+}
+.activeTab p {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Center button styling */
+.tabBarContainer > .tabButton:nth-child(2) {
+  font-size: 1.8rem;
+  color: #000;
+}
