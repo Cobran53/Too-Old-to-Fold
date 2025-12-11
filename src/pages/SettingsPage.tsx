@@ -3,185 +3,150 @@ import {
   IonPage,
   IonHeader,
   IonToolbar,
-  IonTitle,
   IonContent,
-  IonList,
-  IonItem,
-  IonLabel,
-  IonSelect,
-  IonSelectOption,
   IonButton,
   IonIcon,
-  IonListHeader,
-  IonText,
 } from '@ionic/react';
-import { chevronBackOutline } from 'ionicons/icons';
+import {
+  arrowBackOutline,
+  chevronDownOutline,
+  removeOutline,
+  addOutline,
+} from 'ionicons/icons';
+
+import './SettingsPage.css';
 
 const SettingsPage: React.FC = () => {
-  // --- simple state for demo purposes ---
-  const [sedentaryFrequency, setSedentaryFrequency] = React.useState('30 min');
-  const [workoutReminder, setWorkoutReminder] = React.useState('push-only');
-
-  const [rainPref, setRainPref] = React.useState('dont-recommend');
-  const [hailPref, setHailPref] = React.useState('hide-all');
-  const [snowPref, setSnowPref] = React.useState('show-all');
-  const [belowTempPref, setBelowTempPref] = React.useState('dont-recommend');
-
-  const [minTemp, setMinTemp] = React.useState(5);
-
-  const decreaseTemp = () => setMinTemp((prev) => Math.max(-20, prev - 1));
-  const increaseTemp = () => setMinTemp((prev) => Math.min(30, prev + 1));
-
-  const handleResetHidden = () => {
-    // TODO: implement real logic later
-    console.log('Reset all hidden workouts');
-  };
-
-  const handleDeleteAccount = () => {
-    // TODO: implement real logic later
-    console.log('Delete account');
-  };
-
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          {/* Back button – Nolann kan koppla riktig navigation senare */}
-          <IonButton slot="start" fill="clear">
-            <IonIcon icon={chevronBackOutline} />
-          </IonButton>
-          <IonTitle>Account Settings</IonTitle>
+    <IonPage className="settings-page">
+      {/* Svart topp med rund bottencurve + back-knapp */}
+      <IonHeader className="ion-no-border settings-header">
+        <IonToolbar className="settings-toolbar">
+          <div className="settings-header-inner">
+            <IonButton
+              className="settings-back-button"
+              fill="solid"
+              routerLink="/dashboard"
+            >
+              <IonIcon icon={arrowBackOutline} />
+            </IonButton>
+
+            <h1 className="settings-header-title">Account Settings</h1>
+          </div>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent fullscreen>
-        <IonList lines="full">
-          {/* ---- Notifications ---- */}
-          <IonListHeader>
-            <IonLabel>
-              <strong>Notifications</strong>
-            </IonLabel>
-          </IonListHeader>
+      <IonContent fullscreen className="settings-content">
+        {/* --- Notifications --- */}
+        <section className="settings-section">
+          <h2 className="settings-section-title">Notifications</h2>
 
-          <IonItem>
-            <IonLabel>Frequency of sedentary warnings</IonLabel>
-            <IonSelect
-              interface="popover"
-              value={sedentaryFrequency}
-              onIonChange={(e) => setSedentaryFrequency(e.detail.value)}
-            >
-              <IonSelectOption value="15 min">15 min</IonSelectOption>
-              <IonSelectOption value="30 min">30 min</IonSelectOption>
-              <IonSelectOption value="60 min">60 min</IonSelectOption>
-            </IonSelect>
-          </IonItem>
+          <div className="settings-row">
+            <div className="settings-row-text">
+              <span className="settings-row-label">
+                Frequency of sedentarity warnings
+              </span>
+            </div>
+            <button className="settings-row-value">
+              <span>30 min</span>
+              <IonIcon icon={chevronDownOutline} />
+            </button>
+          </div>
 
-          <IonItem>
-            <IonLabel>Workout reminders</IonLabel>
-            <IonSelect
-              interface="popover"
-              value={workoutReminder}
-              onIonChange={(e) => setWorkoutReminder(e.detail.value)}
-            >
-              <IonSelectOption value="push-only">Push only</IonSelectOption>
-              <IonSelectOption value="none">No reminders</IonSelectOption>
-            </IonSelect>
-          </IonItem>
+          <div className="settings-row">
+            <div className="settings-row-text">
+              <span className="settings-row-label">Workout reminders</span>
+            </div>
+            <button className="settings-row-value">
+              <span>Push only</span>
+              <IonIcon icon={chevronDownOutline} />
+            </button>
+          </div>
+        </section>
 
-          {/* ---- Outside workout preferences ---- */}
-          <IonListHeader>
-            <IonLabel>
-              <strong>Outside workout preferences</strong>
-            </IonLabel>
-          </IonListHeader>
+        {/* --- Outside workout preferences --- */}
+        <section className="settings-section">
+          <h2 className="settings-section-title">
+            Outside workout preferences
+          </h2>
 
-          <IonItem>
-            <IonLabel>During rain</IonLabel>
-            <IonSelect
-              interface="popover"
-              value={rainPref}
-              onIonChange={(e) => setRainPref(e.detail.value)}
-            >
-              <IonSelectOption value="dont-recommend">Do not recommend</IonSelectOption>
-              <IonSelectOption value="show-all">Show all</IonSelectOption>
-              <IonSelectOption value="hide-all">Hide all</IonSelectOption>
-            </IonSelect>
-          </IonItem>
+          <div className="settings-row">
+            <div className="settings-row-text">
+              <span className="settings-row-label">During rain</span>
+            </div>
+            <button className="settings-row-value">
+              <span>Do not recommend</span>
+              <IonIcon icon={chevronDownOutline} />
+            </button>
+          </div>
 
-          <IonItem>
-            <IonLabel>During hail</IonLabel>
-            <IonSelect
-              interface="popover"
-              value={hailPref}
-              onIonChange={(e) => setHailPref(e.detail.value)}
-            >
-              <IonSelectOption value="hide-all">Hide all</IonSelectOption>
-              <IonSelectOption value="dont-recommend">Do not recommend</IonSelectOption>
-              <IonSelectOption value="show-all">Show all</IonSelectOption>
-            </IonSelect>
-          </IonItem>
+          <div className="settings-row">
+            <div className="settings-row-text">
+              <span className="settings-row-label">During hail</span>
+            </div>
+            <button className="settings-row-value">
+              <span>Hide all</span>
+              <IonIcon icon={chevronDownOutline} />
+            </button>
+          </div>
 
-          <IonItem>
-            <IonLabel>During snow</IonLabel>
-            <IonSelect
-              interface="popover"
-              value={snowPref}
-              onIonChange={(e) => setSnowPref(e.detail.value)}
-            >
-              <IonSelectOption value="show-all">Show all</IonSelectOption>
-              <IonSelectOption value="dont-recommend">Do not recommend</IonSelectOption>
-              <IonSelectOption value="hide-all">Hide all</IonSelectOption>
-            </IonSelect>
-          </IonItem>
+          <div className="settings-row">
+            <div className="settings-row-text">
+              <span className="settings-row-label">During snow</span>
+            </div>
+            <button className="settings-row-value">
+              <span>Show all</span>
+              <IonIcon icon={chevronDownOutline} />
+            </button>
+          </div>
 
-          <IonItem>
-            <IonLabel>Below min. temperature</IonLabel>
-            <IonSelect
-              interface="popover"
-              value={belowTempPref}
-              onIonChange={(e) => setBelowTempPref(e.detail.value)}
-            >
-              <IonSelectOption value="dont-recommend">Do not recommend</IonSelectOption>
-              <IonSelectOption value="show-all">Show all</IonSelectOption>
-              <IonSelectOption value="hide-all">Hide all</IonSelectOption>
-            </IonSelect>
-          </IonItem>
+          <div className="settings-row">
+            <div className="settings-row-text">
+              <span className="settings-row-label">Below min. temperature</span>
+            </div>
+            <button className="settings-row-value">
+              <span>Do not recommend</span>
+              <IonIcon icon={chevronDownOutline} />
+            </button>
+          </div>
 
-          <IonItem>
-            <IonLabel>Min. temperature</IonLabel>
-            <IonButton slot="end" fill="outline" size="small" onClick={decreaseTemp}>
-              −
-            </IonButton>
-            <IonText slot="end" style={{ padding: '0 8px' }}>
-              {minTemp}°C
-            </IonText>
-            <IonButton slot="end" fill="outline" size="small" onClick={increaseTemp}>
-              +
-            </IonButton>
-          </IonItem>
+          <div className="settings-row settings-row-min-temp">
+            <div className="settings-row-text">
+              <span className="settings-row-label">Min. temperature: 5°C</span>
+            </div>
+            <div className="settings-row-counter">
+              <button className="settings-counter-button">
+                <IonIcon icon={removeOutline} />
+              </button>
+              <button className="settings-counter-button">
+                <IonIcon icon={addOutline} />
+              </button>
+            </div>
+          </div>
+        </section>
 
-          {/* ---- Account ---- */}
-          <IonListHeader>
-            <IonLabel>
-              <strong>Account</strong>
-            </IonLabel>
-          </IonListHeader>
+        {/* --- Account --- */}
+        <section className="settings-section">
+          <h2 className="settings-section-title">Account</h2>
 
-          <IonItem>
-            <IonLabel>Data preferences</IonLabel>
-            <IonText slot="end" color="medium">
-              Survey data
-            </IonText>
-          </IonItem>
+          <div className="settings-row">
+            <div className="settings-row-text">
+              <span className="settings-row-label">Data preferences</span>
+            </div>
+            <button className="settings-row-value">
+              <span>Survey data</span>
+              <IonIcon icon={chevronDownOutline} />
+            </button>
+          </div>
 
-          <IonItem button detail={false} onClick={handleResetHidden}>
-            <IonLabel color="danger">Reset all hidden workouts</IonLabel>
-          </IonItem>
+          <button className="settings-row-link settings-row-link-danger">
+            Reset all hidden workouts
+          </button>
 
-          <IonItem button detail={false} onClick={handleDeleteAccount}>
-            <IonLabel color="danger">Delete account</IonLabel>
-          </IonItem>
-        </IonList>
+          <button className="settings-row-link settings-row-link-danger">
+            Delete account
+          </button>
+        </section>
       </IonContent>
     </IonPage>
   );

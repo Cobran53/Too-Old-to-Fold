@@ -1,0 +1,155 @@
+/* Samma känsla som Dashboard/Training */
+.settings-page {
+  --ion-background-color: #e8e8e8;
+  width: 375px;
+  height: 812px;
+  max-width: 100vw;
+  max-height: 100vh;
+  overflow: hidden;
+  font-family: 'Sanchez', Arial, sans-serif !important;
+}
+
+.settings-content {
+  --padding-start: 24px;
+  --padding-end: 24px;
+  --padding-top: 0;
+  --padding-bottom: 24px;
+  background-color: #f3f3f3;
+}
+
+/* --- Header med svart topp och rundad botten --- */
+.settings-header {
+  --background: transparent;
+}
+
+.settings-toolbar {
+  --background: transparent;
+  padding: 0;
+}
+
+.settings-header-inner {
+  background: #1f1b1a;
+  border-bottom-left-radius: 40px;
+  border-bottom-right-radius: 40px;
+  padding: 28px 24px 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.settings-back-button {
+  --background: #c2986d;
+  --background-hover: #c2986d;
+  --background-activated: #b48657;
+  --box-shadow: none;
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
+  border-radius: 999px;
+}
+
+.settings-back-button ion-icon {
+  font-size: 20px;
+  color: #ffffff;
+}
+
+.settings-header-title {
+  margin: 0;
+  font-size: 20px;
+  color: #ffffff;
+}
+
+/* --- Sektioner (Notifications / Outside... / Account) --- */
+
+.settings-section {
+  margin-top: 24px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #d0d0d0;
+}
+
+.settings-section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin: 0 0 8px 0;
+  text-decoration: underline;
+}
+
+/* --- Rader & värden --- */
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.settings-row-text {
+  max-width: 65%;
+}
+
+.settings-row-label {
+  font-size: 14px;
+  color: #333333;
+}
+
+/* “30 min  ˅” på höger sida */
+.settings-row-value {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: transparent;
+  font-family: 'Sanchez', Arial, sans-serif;
+  font-size: 14px;
+  color: #8c8c8c;
+  padding: 0;
+}
+
+.settings-row-value ion-icon {
+  font-size: 14px;
+}
+
+/* Min temperature + +/- knappar */
+.settings-row-min-temp {
+  align-items: center;
+}
+
+.settings-row-counter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.settings-counter-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+  border: none;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-counter-button ion-icon {
+  font-size: 18px;
+  color: #555555;
+}
+
+/* --- Account-länkar (Reset / Delete) --- */
+
+.settings-row-link {
+  width: 100%;
+  text-align: left;
+  padding: 10px 0;
+  border: none;
+  background: transparent;
+  font-family: 'Sanchez', Arial, sans-serif;
+  font-size: 14px;
+  color: #333333;
+}
+
+.settings-row-link-danger {
+  color: #c0392b;
+}
