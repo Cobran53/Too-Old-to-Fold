@@ -6,6 +6,7 @@ import Welcome from './pages/Welcome';
 import Dashboard from './pages/Dashboard';
 import TrainingListPage from './pages/TrainingListPage';
 import Progress from './pages/Progress';
+import Calendar from './pages/Calendar';
 import SettingsPage from './pages/SettingsPage';   // <-- NY IMPORT
 
 /* Core CSS required for Ionic components to work properly */
@@ -62,8 +63,9 @@ const App: React.FC = () => (
           <Route exact path="/progress">
             <Progress />
           </Route>
-
-          {/* NY ROUTE FÖR SETTINGS */}
+          <Route exact path="/calendar">
+            <Calendar />
+          </Route>
           <Route exact path="/settings">
             <SettingsPage />
           </Route>
