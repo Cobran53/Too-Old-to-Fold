@@ -3,7 +3,7 @@ import { IonReactRouter } from '@ionic/react-router';
 import './Progress.css';
 
 const Progress: React.FC = () => {
-  return (
+  return (<div></div>
   );
 };
 

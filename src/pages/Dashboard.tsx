@@ -30,8 +30,6 @@ import AppTabBar from '../components/AppTabBar';
 const Dashboard: React.FC = () => {
     return (
         <IonPage className="dashboard-page">
-            
-            {/* Header: Month and Settings Icon */}
             <IonHeader className="ion-no-border">
                 <IonToolbar>
                     <IonTitle slot="start" className="month-title">July 2026</IonTitle>
@@ -40,8 +38,6 @@ const Dashboard: React.FC = () => {
             </IonHeader>
 
             <IonContent fullscreen className="ion-padding dashboard-content">
-                
-                {/* Date Picker/Carousel */}
                 <section className="date-picker-section">
                     <div className="date-picker">
                         {['S 10', 'M 11', 'Tu 12', 'W 13', 'Th 14', 'F 15', 'S 16'].map((day, index) => (
@@ -58,7 +54,6 @@ const Dashboard: React.FC = () => {
                     </div>
                 </section>
 
-                {/* Today's Plan */}
                 <section className="todays-plan">
                     <h3 className="section-title">Today's Plan</h3>
 
@@ -78,13 +73,11 @@ const Dashboard: React.FC = () => {
                     />
                 </section>
 
-                {/* Weekly Goals */}
                 <section className="weekly-goals">
                     <h3 className="section-title">Weakly Goals</h3>
 
                     <IonGrid className="goals-container">
                         <IonRow>
-                            {/* Instance 1: Strength Goal */}
                             <GoalCard
                                 title="Strength"
                                 minText='mins left'
@@ -92,7 +85,6 @@ const Dashboard: React.FC = () => {
                                 completionPercentage={40}
                             />
 
-                            {/* Instance 2: Distance Goal */}
                             <GoalCard
                                 title="Distance"
                                 minText='steps left'
