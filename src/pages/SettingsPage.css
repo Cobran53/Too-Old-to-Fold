@@ -59,7 +59,7 @@
   color: #ffffff;
 }
 
-/* --- Sektioner (Notifications / Outside... / Account) --- */
+/* --- Sektioner --- */
 
 .settings-section {
   margin-top: 24px;
@@ -93,7 +93,7 @@
   color: #333333;
 }
 
-/* “30 min  ˅” på höger sida */
+/* Höger-värde ("30 min", "Push only", etc.) */
 .settings-row-value {
   display: flex;
   align-items: center;
@@ -152,4 +152,30 @@
 
 .settings-row-link-danger {
   color: #c0392b;
+}
+
+/* --- Inline dropdown under raderna --- */
+
+.settings-inline-options {
+  margin: 4px 0 6px 0;
+  padding-left: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.settings-inline-option-button {
+  width: 100%;
+  text-align: left;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #dddddd;
+  background: #ffffff;
+  font-family: 'Sanchez', Arial, sans-serif;
+  font-size: 14px;
+  color: #333333;
+}
+
+.settings-inline-option-button:hover {
+  background: #f0f0f0;
 }
