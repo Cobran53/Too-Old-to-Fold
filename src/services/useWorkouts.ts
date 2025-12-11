@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 // Assuming you have configured your project to handle YAML imports correctly
-import workoutsYamlData from '../assets/data/workouts.yaml'; 
+import workoutsYamlData from '/data/workouts.yaml?url'; 
 
 
 // --- 1. DEFINE TYPES (Based on your YAML structure) ---

@@ -4,23 +4,20 @@
     --primary-blue: #455a73;
     --active-day: #2b395d;
     --card-background: #ffffff;
-    --goal-ring-done: #f0c97d; /* Light brown/gold */
-    --goal-ring-todo: #c3d9e8; /* Light blue/grey */
+    --goal-ring-done: #f0c97d;
+    --goal-ring-todo: #c3d9e8; 
     --font-color: #1a1a2e;
     
 }
 
-/* --- Ionic Component Overrides & Page Layout --- */
 .dashboard-page {
-    /* Set the background of the page content */
     --ion-background-color: #e8e8e8;
     width: 375px; /* Typical mobile width for demonstration */
     height: 812px; /* Typical mobile height for demonstration */
     max-width: 100vw;
     max-height: 100vh;
     overflow: hidden;
-    font-family: 'Sanchez', Arial, sans-serif !important; /* Fallback font */
-    
+    font-family: 'Sanchez', Arial, sans-serif !important;     
 }
 
 ion-app {   
@@ -29,7 +26,6 @@ ion-app {
 }
 
 .dashboard-content {
-    /* Remove padding to control spacing manually */
     --padding-start: 20px;
     --padding-end: 20px;
     --padding-top: 0;
@@ -37,11 +33,9 @@ ion-app {
 }
 
 .ion-no-border {
-    /* Removes the standard Ionic header border */
     --border-width: 0 !important;
 }
 
-/* Header & Settings */
 ion-toolbar {
     --background: transparent;
     --padding-top: 10px;
@@ -59,7 +53,6 @@ ion-toolbar {
     padding-right: 25px;
 }
 
-/* --- Date Picker --- */
 .date-picker-section {
     margin-bottom: 20px;
 }
@@ -69,7 +62,6 @@ ion-toolbar {
     overflow-x: scroll;
     padding: 10px 0;
     gap: 10px;
-    /* Hide scrollbar */
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
@@ -128,7 +120,6 @@ ion-toolbar {
     background-color: var(--active-day);
 }
 
-/* --- Today's Plan --- */
 .section-title {
     font-size: 18px;
     font-weight: 600;
