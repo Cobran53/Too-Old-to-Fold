@@ -36,12 +36,12 @@ const AppTabBar: React.FC<AppTabBarProps> = ({ selectedTab = 'home' }) => {
 
             {/* Workout Tab (Icon only, no label needed) */}
             <IonTabButton 
-                tab="workout" 
+                tab="training" 
                 href="/training-list" 
-                className={`nav-item ${selectedTab === 'workout' ? 'active-tab' : ''}`}
+                className={`nav-item ${selectedTab === 'training' ? 'active-tab' : ''}`}
             >
                 <IonIcon icon={barbellOutline} />
-                {selectedTab === 'workout' && <span className="nav-label">Workout</span>}
+                {selectedTab === 'training' && <span className="nav-label">Training</span>}
             </IonTabButton>
         </IonTabBar>
     );

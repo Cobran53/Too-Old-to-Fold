@@ -9,6 +9,11 @@
   --font-color: #1a1a2e;
 }
 
+IonList {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* --- Telefonram / layout --- */
 .training-page {
   --ion-background-color: #e8e8e8;
@@ -18,6 +23,7 @@
   max-height: 100vh;
   overflow: hidden;
   font-family: 'Sanchez', Arial, sans-serif !important;
+
 }
 
 .training-content {
@@ -107,6 +113,17 @@
 .training-list {
   padding-top: 4px;
   background: transparent;
+
+  /* Hide the scrollbar for Webkit browsers (Chrome, Safari, etc.) */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide the scrollbar for IE and Edge */
+  -ms-overflow-style: none;
+
+  /* Hide the scrollbar for Firefox */
+  scrollbar-width: none;
 }
 
 /* --- Kort --- */
