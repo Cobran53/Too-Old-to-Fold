@@ -1,4 +1,4 @@
-/* Färgpalett – samma som Dashboard */
+/* --- Samma färgpalett som dashboard --- */
 :root {
   --primary-dark: #2c2f43;
   --primary-blue: #455a73;
@@ -9,7 +9,7 @@
   --font-color: #1a1a2e;
 }
 
-/* Samma “telefonstorlek” som dashboard-page */
+/* --- Telefonram / layout --- */
 .training-page {
   --ion-background-color: #e8e8e8;
   width: 375px;
@@ -20,54 +20,115 @@
   font-family: 'Sanchez', Arial, sans-serif !important;
 }
 
-/* Content liknande dashboard-content */
 .training-content {
   --padding-start: 20px;
   --padding-end: 20px;
   --padding-top: 0;
   --padding-bottom: 0;
-  background: #e8e8e8;
+  background-color: #e8e8e8;
 }
 
-/* Ta bort standardborder på headern som på dashboard */
-.ion-no-border {
-  --border-width: 0 !important;
+/* --- Toprad: titel + filter --- */
+.training-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
 }
 
 .training-title {
   font-size: 20px;
   color: var(--font-color);
+  margin: 0;
 }
 
-/* Sökfältet högst upp */
+.training-filter-button {
+  --padding-start: 4px;
+  --padding-end: 4px;
+}
+
+.training-filter-button ion-icon {
+  font-size: 22px;
+  color: var(--primary-dark);
+}
+
+/* --- Searchbar: gör den tydlig --- */
 .training-searchbar {
-  margin-top: 8px;
-  margin-bottom: 8px;
-}
-
-/* Segment (filter) */
-.training-segment {
+  margin-top: 12px;
   margin-bottom: 10px;
+
+  --background: #ffffff;
+  --color: var(--font-color);
+  --placeholder-color: #999999;
+  --icon-color: #b0b0b0;
+  --border-radius: 12px;
+  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Lista / kortlayout */
+
+/* --- Segment / kategorier: tydligare text + mörkblå highlight --- */
+/* --- Segment / kategorier: tydligare text + mörkblå highlight --- */
+.training-segment {
+  margin-bottom: 14px;
+
+  width: 100%;
+  --background: #ffffff;
+  --indicator-color: var(--primary-dark);   /* mörkblå underline */
+  --indicator-height: 2px;
+
+  --color: #555555;                         /* inaktiv textfärg */
+  --color-checked: var(--primary-dark);     /* aktiv textfärg */
+
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* segment-knapparna: dela på utrymmet och fixa färgerna hårdare */
+.training-segment ion-segment-button {
+  text-transform: none;
+  font-size: 13px;
+  font-weight: 500;
+
+  flex: 1;
+  justify-content: center;
+  min-width: 0;
+  white-space: nowrap;
+
+  color: #555555 !important;               /* inaktiv textfärg */
+}
+
+/* aktiv knapp – mörkblå text */
+.training-segment ion-segment-button.segment-button-checked {
+  color: var(--primary-dark) !important;
+}
+
+
+/* --- Lista --- */
 .training-list {
   padding-top: 4px;
+  background: transparent;
 }
 
-/* Kortens utseende */
+/* --- Kort --- */
 .training-card {
   border-radius: 16px;
   overflow: hidden;
   background: var(--card-background);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   margin-bottom: 16px;
+  margin-inline: 0;
 }
 
 .training-card-image {
   width: 100%;
   height: 160px;
   object-fit: cover;
+}
+
+.training-card-header {
+  padding-inline: 16px;
+  padding-top: 10px;
+  padding-bottom: 6px;
 }
 
 .training-card-title {
@@ -89,16 +150,40 @@
   font-size: 16px;
 }
 
-/* Beskrivningstexten */
-.training-card-description {
-  margin-bottom: 8px;
-  font-size: 14px;
-  color: #555;
+.training-card-content {
+  padding-inline: 16px;
+  padding-bottom: 12px;
 }
 
-/* Footer-raden i kortet (ikon + tag + menyknapp) */
+.training-card-description {
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #555555;
+}
+
+/* Footer/tag-rad */
 .training-card-footer {
   --inner-padding-end: 0;
+  --background: transparent;
   padding-inline-start: 0;
-  margin-top: 8px;
+  margin-top: 4px;
+  font-size: 14px;
+  border-radius: 12px;
+  background-color: var(--primary-dark);
+  color: #ffffff;
+  padding-inline: 12px;
+  min-height: 40px;
 }
+
+.training-card-footer ion-icon {
+  color: #ffffff;
+}
+
+.training-card-footer ion-label {
+  color: #ffffff;
+}
+
+.training-card-footer ion-button {
+  color: #ffffff;
+}
+

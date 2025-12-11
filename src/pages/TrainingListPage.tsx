@@ -1,9 +1,6 @@
 import React from 'react';
 import {
   IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
   IonSearchbar,
   IonList,
@@ -30,6 +27,7 @@ import {
 } from 'ionicons/icons';
 
 import './TrainingList.css';
+import AppTabBar from '../components/AppTabBar';
 
 type WorkoutType = 'walking' | 'strength' | 'balance';
 
@@ -97,7 +95,7 @@ const TrainingListPage: React.FC = () => {
 
   const getTypeIcon = (type: WorkoutType) => {
     if (type === 'walking') return walkOutline;
-    return barbellOutline; // byt gärna ikon senare om du vill särskilja balance
+    return barbellOutline;
   };
 
   const openDetails = (workout: Workout) => {
@@ -112,16 +110,20 @@ const TrainingListPage: React.FC = () => {
 
   return (
     <IonPage className="training-page">
-      <IonHeader className="ion-no-border">
-        <IonToolbar>
-          <IonTitle className="training-title">Training</IonTitle>
-          <IonButton slot="end" fill="clear" aria-label="Filter exercises">
+      {/* Scrollande innehåll */}
+      <IonContent fullscreen className="training-content">
+        {/* Top-rad med titel + filter */}
+        <div className="training-top-row">
+          <h1 className="training-title">Training</h1>
+          <IonButton
+            fill="clear"
+            aria-label="Filter exercises"
+            className="training-filter-button"
+          >
             <IonIcon icon={funnelOutline} />
           </IonButton>
-        </IonToolbar>
-      </IonHeader>
+        </div>
 
-      <IonContent fullscreen className="training-content">
         {/* Sökfält */}
         <IonSearchbar
           className="training-searchbar"
@@ -130,7 +132,7 @@ const TrainingListPage: React.FC = () => {
           onIonChange={(e) => setSearchText(e.detail.value ?? '')}
         />
 
-        {/* Filtersegment */}
+        {/* Segment / kategorier */}
         <IonSegment
           value={activeFilter}
           onIonChange={(e) =>
@@ -168,7 +170,7 @@ const TrainingListPage: React.FC = () => {
                 className="training-card-image"
               />
 
-              <IonCardHeader>
+              <IonCardHeader className="training-card-header">
                 <IonCardTitle className="training-card-title">
                   {workout.title}
                 </IonCardTitle>
@@ -179,7 +181,7 @@ const TrainingListPage: React.FC = () => {
                 </IonCardSubtitle>
               </IonCardHeader>
 
-              <IonCardContent>
+              <IonCardContent className="training-card-content">
                 <p className="training-card-description">{workout.description}</p>
 
                 <IonItem lines="none" className="training-card-footer">
@@ -197,14 +199,6 @@ const TrainingListPage: React.FC = () => {
 
         {/* Modal för detaljer */}
         <IonModal isOpen={isModalOpen} onDidDismiss={closeDetails}>
-          <IonHeader>
-            <IonToolbar>
-              <IonTitle>{selectedWorkout?.title ?? 'Training'}</IonTitle>
-              <IonButton slot="end" fill="clear" onClick={closeDetails}>
-                <IonIcon icon={closeOutline} />
-              </IonButton>
-            </IonToolbar>
-          </IonHeader>
           <IonContent className="ion-padding">
             {selectedWorkout && (
               <>
@@ -239,6 +233,9 @@ const TrainingListPage: React.FC = () => {
           </IonContent>
         </IonModal>
       </IonContent>
+
+      {/* Botten-navigering – samma komponent som på Dashboard */}
+      <AppTabBar selectedTab="training" />
     </IonPage>
   );
 };
