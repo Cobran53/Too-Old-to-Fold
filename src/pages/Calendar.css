@@ -1,5 +1,5 @@
 /*TODO PUT BACK IN .CSS DOES NOT WORK*/
-Define custom colors
+/* Define custom colors */
 :root {
   --cal-bg-color: #b19371; /* Beige/brown from image */
   --stats-bg-color: #1c2b4a; /* Dark blue from image */
@@ -7,8 +7,17 @@ Define custom colors
   --text-dark: #111;
 }
 
+.statsPage {
+  width: 375px; /* Typical mobile width for demonstration */
+  height: 812px; /* Typical mobile height for demonstration */
+  max-width: 100vw;
+  max-height: 100vh;
+  overflow: hidden;
+  font-family: 'Sanchez', Arial, sans-serif !important;
+}
+
  /* Base Page Setup */
-ion-content {
+.statsPage ion-content {
   --background: var(--stats-bg-color); /* Ensure the content area has the dark blue background */
 }
 

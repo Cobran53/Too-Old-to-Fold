@@ -1,4 +1,4 @@
-//TODO DOES NOT WORK 
+//TODO DOES NOT WORK
 import React from 'react';
 import {
   IonPage,
@@ -13,7 +13,7 @@ import {
   arrowBackOutline,
   flame,
 } from 'ionicons/icons';
-/* import './Calendar.css'; */
+import './Calendar.css';
 
 const Calendar: React.FC = () => {
   return (
@@ -24,7 +24,12 @@ const Calendar: React.FC = () => {
           <IonHeader className="ion-no-border headerTransparent">
             <IonToolbar>
               <IonButtons slot="start">
-                <IonButton fill="clear" color="light">
+                <IonButton 
+                    fill="clear" 
+                    color="light" 
+                    routerLink="/dashboard" 
+                    routerDirection="back"
+                >
                   <IonIcon icon={arrowBackOutline} className="backIcon" />
                 </IonButton>
               </IonButtons>
@@ -39,8 +44,8 @@ const Calendar: React.FC = () => {
 
           {/* Date Info */}
           <div className="dateInfo">
-            <p>Wednesday</p>
-            <h1>12 December</h1>
+            <p>Thursday</p>
+            <h1>11 December</h1>
           </div>
 
           {/* Calendar Grid */}
@@ -89,13 +94,13 @@ const Calendar: React.FC = () => {
 
           {/* Day Labels */}
           <div className="dayLabels">
-            <span>Sat</span>
-            <span>Sun</span>
             <span>Mon</span>
             <span>Tue</span>
             <span>Wed</span>
             <span>Thr</span>
             <span>Fri</span>
+            <span>Sat</span>
+            <span>Sun</span>
           </div>
         </div>
 

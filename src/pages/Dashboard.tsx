@@ -9,6 +9,7 @@ import {
   IonGrid,
   IonRow,
   IonButton,
+  useIonRouter,
 } from '@ionic/react';
 import {
   settingsOutline,
@@ -20,7 +21,7 @@ import GoalCard from '../components/GoalCard';
 import AppTabBar from '../components/AppTabBar';
 
 const formatDate = (date: Date): string => {
-  const dayNames = ['Sun', 'Mon', 'Tue', 'Wes', 'Thu', 'Fri', 'Sat'];
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const dayOfWeek = dayNames[date.getDay()];
   const dateNumber = date.getDate();
   return `${dayOfWeek} ${dateNumber}`;
@@ -34,6 +35,7 @@ const Dashboard: React.FC = () => {
   // vald dag (default: idag)
   const [selectedDateKey, setSelectedDateKey] = useState(getDateKey(new Date()));
   const [datesToDisplay, setDatesToDisplay] = useState<Date[]>([]);
+  const ionRouter = useIonRouter();
 
   useEffect(() => {
     const today = new Date();
@@ -68,7 +70,6 @@ const Dashboard: React.FC = () => {
             {new Date().getFullYear()}
           </IonTitle>
 
-          {/* KUGGHJUL → SETTINGS */}
           <IonButton
             slot="end"
             fill="clear"
@@ -94,7 +95,15 @@ const Dashboard: React.FC = () => {
                 <div
                   key={dateKey}
                   className={`day-card ${isActive ? 'active' : 'inactive'}`}
-                  onClick={() => handleDateClick(date)}
+                  onClick={() => {
+                        // 1. First, update the selected date (always)
+                        handleDateClick(date); 
+                        
+                        // 2. Then, if the clicked date is the currently selected (active) one, navigate
+                        if (isActive) {
+                            ionRouter.push('/calendar');
+                        }
+                    }}
                 >
                   {parts.map((part, i) => (
                     <span
