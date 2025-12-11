@@ -21,7 +21,15 @@ import {
   IonModal,
 } from '@ionic/react';
 
-import { funnelOutline, timeOutline, walkOutline, barbellOutline, closeOutline } from 'ionicons/icons';
+import {
+  funnelOutline,
+  timeOutline,
+  walkOutline,
+  barbellOutline,
+  closeOutline,
+} from 'ionicons/icons';
+
+import './TrainingList.css';
 
 type WorkoutType = 'walking' | 'strength' | 'balance';
 
@@ -78,7 +86,6 @@ const TrainingListPage: React.FC = () => {
   const [searchText, setSearchText] = React.useState('');
   const [activeFilter, setActiveFilter] = React.useState<'all' | WorkoutType>('all');
 
-  // modal-state
   const [selectedWorkout, setSelectedWorkout] = React.useState<Workout | null>(null);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
@@ -90,7 +97,7 @@ const TrainingListPage: React.FC = () => {
 
   const getTypeIcon = (type: WorkoutType) => {
     if (type === 'walking') return walkOutline;
-    return barbellOutline; // du kan byta till annan ikon för balance om du vill
+    return barbellOutline; // byt gärna ikon senare om du vill särskilja balance
   };
 
   const openDetails = (workout: Workout) => {
@@ -104,34 +111,33 @@ const TrainingListPage: React.FC = () => {
   };
 
   return (
-    <IonPage>
-      <IonHeader>
+    <IonPage className="training-page">
+      <IonHeader className="ion-no-border">
         <IonToolbar>
-          <IonTitle>Training</IonTitle>
-          <IonButton
-            slot="end"
-            fill="clear"
-            aria-label="Filter exercises"
-          >
+          <IonTitle className="training-title">Training</IonTitle>
+          <IonButton slot="end" fill="clear" aria-label="Filter exercises">
             <IonIcon icon={funnelOutline} />
           </IonButton>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent fullscreen className="ion-padding">
+      <IonContent fullscreen className="training-content">
+        {/* Sökfält */}
         <IonSearchbar
+          className="training-searchbar"
           placeholder="Find an exercise"
           value={searchText}
           onIonChange={(e) => setSearchText(e.detail.value ?? '')}
         />
 
+        {/* Filtersegment */}
         <IonSegment
           value={activeFilter}
           onIonChange={(e) =>
             setActiveFilter((e.detail.value as 'all' | WorkoutType) ?? 'all')
           }
           mode="md"
-          style={{ marginBottom: 12 }}
+          className="training-segment"
         >
           <IonSegmentButton value="all">
             <IonLabel>All</IonLabel>
@@ -147,41 +153,40 @@ const TrainingListPage: React.FC = () => {
           </IonSegmentButton>
         </IonSegment>
 
-        <IonList lines="none">
+        {/* Lista med träningspass */}
+        <IonList lines="none" className="training-list">
           {filteredWorkouts.map((workout) => (
-            <IonCard key={workout.id} button onClick={() => openDetails(workout)}>
+            <IonCard
+              key={workout.id}
+              button
+              onClick={() => openDetails(workout)}
+              className="training-card"
+            >
               <img
                 src={workout.image}
                 alt={workout.title}
-                style={{
-                  width: '100%',
-                  height: '160px',
-                  objectFit: 'cover',
-                  borderRadius: '16px 16px 0 0',
-                }}
+                className="training-card-image"
               />
 
               <IonCardHeader>
-                <IonCardTitle>{workout.title}</IonCardTitle>
+                <IonCardTitle className="training-card-title">
+                  {workout.title}
+                </IonCardTitle>
 
-                <IonCardSubtitle>
-                  <IonIcon icon={timeOutline} style={{ marginRight: 4 }} />
+                <IonCardSubtitle className="training-card-subtitle">
+                  <IonIcon icon={timeOutline} className="training-time-icon" />
                   {workout.duration}
                 </IonCardSubtitle>
               </IonCardHeader>
 
               <IonCardContent>
-                <p style={{ marginBottom: 8 }}>{workout.description}</p>
+                <p className="training-card-description">{workout.description}</p>
 
-                <IonItem lines="none">
+                <IonItem lines="none" className="training-card-footer">
                   <IonIcon slot="start" icon={getTypeIcon(workout.type)} />
                   <IonLabel>{workout.tag}</IonLabel>
 
-                  <IonButton
-                    slot="end"
-                    fill="clear"
-                    size="small"
-                  >
+                  <IonButton slot="end" fill="clear" size="small">
                     ···
                   </IonButton>
                 </IonItem>
@@ -222,7 +227,6 @@ const TrainingListPage: React.FC = () => {
 
                 <p style={{ marginTop: 16 }}>{selectedWorkout.description}</p>
 
-                {/* Här kan ni senare lägga in steg-för-steg-instruktioner osv */}
                 <IonButton
                   expand="block"
                   style={{ marginTop: 24 }}

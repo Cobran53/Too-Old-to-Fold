@@ -1,0 +1,104 @@
+/* Färgpalett – samma som Dashboard */
+:root {
+  --primary-dark: #2c2f43;
+  --primary-blue: #455a73;
+  --active-day: #2b395d;
+  --card-background: #ffffff;
+  --goal-ring-done: #f0c97d;
+  --goal-ring-todo: #c3d9e8;
+  --font-color: #1a1a2e;
+}
+
+/* Samma “telefonstorlek” som dashboard-page */
+.training-page {
+  --ion-background-color: #e8e8e8;
+  width: 375px;
+  height: 812px;
+  max-width: 100vw;
+  max-height: 100vh;
+  overflow: hidden;
+  font-family: 'Sanchez', Arial, sans-serif !important;
+}
+
+/* Content liknande dashboard-content */
+.training-content {
+  --padding-start: 20px;
+  --padding-end: 20px;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  background: #e8e8e8;
+}
+
+/* Ta bort standardborder på headern som på dashboard */
+.ion-no-border {
+  --border-width: 0 !important;
+}
+
+.training-title {
+  font-size: 20px;
+  color: var(--font-color);
+}
+
+/* Sökfältet högst upp */
+.training-searchbar {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+/* Segment (filter) */
+.training-segment {
+  margin-bottom: 10px;
+}
+
+/* Lista / kortlayout */
+.training-list {
+  padding-top: 4px;
+}
+
+/* Kortens utseende */
+.training-card {
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--card-background);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  margin-bottom: 16px;
+}
+
+.training-card-image {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+.training-card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--font-color);
+}
+
+.training-card-subtitle {
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--primary-blue);
+}
+
+.training-time-icon {
+  margin-right: 4px;
+  font-size: 16px;
+}
+
+/* Beskrivningstexten */
+.training-card-description {
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Footer-raden i kortet (ikon + tag + menyknapp) */
+.training-card-footer {
+  --inner-padding-end: 0;
+  padding-inline-start: 0;
+  margin-top: 8px;
+}
