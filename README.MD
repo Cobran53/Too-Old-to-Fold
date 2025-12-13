@@ -45,3 +45,17 @@
 ## Additional Notes
 - If you encounter issues with the Node.js version, update to the latest LTS version.
 - Refer to the [official Ionic documentation](https://ionicframework.com/docs) for more information.
+
+## TODO
+1) Finish all web pages (static -> interactive -> dynamic)
+   * Welcome (100% done)
+   * Dashboard (100% static, 50% interactive)
+   * Progress (100% static, 0% interactive)
+   * Settings (90% static, 20% interactive)
+   * Trainings (100% static, 0% interactive)
+   * Calendar (100% static, 10% interactive)
+2) make database (10%, workouts done)
+3) Make app send notifications (requires 2) (0%)
+4) Read sensors and weather api and write in DB (requires 2) (0%)
+5) Make .tsfile export (0%)
+6) Make .tsfile reader (0%) (requires 2 and 5)
