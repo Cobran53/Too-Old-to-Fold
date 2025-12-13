@@ -19,6 +19,7 @@ import './Dashboard.css';
 import MiniWorkoutCard from '../components/MiniWorkoutCard';
 import GoalCard from '../components/GoalCard';
 import AppTabBar from '../components/AppTabBar';
+import useWorkouts from '../services/useWorkouts';
 
 const formatDate = (date: Date): string => {
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -54,6 +55,11 @@ const Dashboard: React.FC = () => {
 
     setDatesToDisplay(days);
   }, []);
+
+  const { workouts, isLoading } = useWorkouts({// No criteria for now
+  });
+  console.log('Filtered Workouts:', workouts);  
+  
 
   const handleDateClick = (date: Date) => {
     const newSelectedKey = getDateKey(date);
@@ -125,22 +131,45 @@ const Dashboard: React.FC = () => {
 
         {/* Today's Plan */}
         <section className="todays-plan">
-          <h3 className="section-title">Today's Plan</h3>
+          <h3 className="section-title">
+            {selectedDateKey === getDateKey(new Date())
+              ? "Today's Plan"
+              : (() => {
+                  const date = new Date(selectedDateKey);
+                  const month = date.toLocaleString('en', { month: 'short' });
+                  const day = date.getDate();
+                  const getOrdinal = (n: number) => {
+                    if (n > 3 && n < 21) return 'th';
+                    switch (n % 10) {
+                      case 1: return 'st';
+                      case 2: return 'nd';
+                      case 3: return 'rd';
+                      default: return 'th';
+                    }
+                  };
+                  return `${month} ${day}${getOrdinal(day)} plans`;
+                })()}
+          </h3>
 
-          <MiniWorkoutCard
-            title="Long Walk"
-            time="10:00 AM"
-            description="7 km walk in the sunny weather"
-            imageSrc="https://picsum.photos/seed/walk/100/100"
-            imageAlt="A sunny path"
-          />
-          <MiniWorkoutCard
-            title="Leg Workout At Home"
-            time="3:00 PM"
-            description="Simple leg focused workout"
-            imageSrc="https://picsum.photos/seed/yoga/100/100"
-            imageAlt="A sunny path"
-          />
+          <div>
+            {isLoading ? (
+                <p>Loading workouts...</p>
+            ) : (
+                [...workouts]
+                  .sort(() => Math.random() - 0.5)
+                  .slice(0, 2)
+                  .map((workout) => (
+                    <MiniWorkoutCard
+                      key={workout.id}
+                      title={workout.name}
+                      time={workout.duration_minutes + " mins"}
+                      description={workout.description}
+                      imageSrc={workout.link_to_image || "https://picsum.photos/seed/workout/100/100"}
+                      imageAlt={workout.name}
+                    />
+                  ))
+            )}
+          </div>
         </section>
 
         {/* Weekly Goals */}

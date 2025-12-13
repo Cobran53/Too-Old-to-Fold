@@ -5,7 +5,7 @@ workouts:
     id: walk-park-1
     length: 7 km
     link_to_page: /workout/long-walk
-    link_to_image: https://picsum.photos/seed/walk/100/100
+    link_to_image: https://picsum.photos/seed/workout/100/100
     duration_minutes: 60
     location: outside
     category: walking
@@ -25,7 +25,7 @@ workouts:
     id: balance-tree-1
     length: N/A
     link_to_page: /workout/tree-pose
-    link_to_image: https://picsum.photos/seed/walk/100/100
+    link_to_image: https://picsum.photos/seed/yoga/100/100
     duration_minutes: 15
     location: inside
     category: balance
@@ -35,7 +35,7 @@ workouts:
     id: sprints-core-a
     length: 500m (sprint)
     link_to_page: /workout/hill-sprints
-    link_to_image: https://picsum.photos/seed/walk/100/100
+    link_to_image: https://picsum.photos/seed/sprints/100/100
     duration_minutes: 45
     location: both
     category: strength

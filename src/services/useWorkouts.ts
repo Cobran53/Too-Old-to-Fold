@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 // Assuming you have configured your project to handle YAML imports correctly
-import workoutsYamlData from '/data/workouts.yaml?url'; 
+import workoutsYamlData from '../data/workouts.yaml'; 
 
 
 // --- 1. DEFINE TYPES (Based on your YAML structure) ---
@@ -15,7 +15,7 @@ export interface Workout {
     id: string;
     length: string;
     link_to_page: string;
-    link_to_image: string;
+    link_to_image?: string;
     duration_minutes: number;
     location: WorkoutLocation;
     category: WorkoutCategory;
@@ -32,8 +32,8 @@ const WORKOUTS_DATA: Workout[] = workoutsYamlData.workouts || [];
 interface WorkoutCriteria {
     category?: WorkoutCategory;
     location?: WorkoutLocation;
-    minDuration?: number; // New: Minimum duration in minutes
-    maxDuration?: number; // New: Maximum duration in minutes
+    minDuration?: number;
+    maxDuration?: number;
 }
 
 /**
@@ -45,32 +45,30 @@ const fetchFilteredWorkouts = (criteria: WorkoutCriteria): Promise<Workout[]> =>
     return new Promise((resolve) => {
         setTimeout(() => {
             const filtered = WORKOUTS_DATA.filter(workout => {
-                let matches = true;
-
                 // 1. Category Filter
                 if (criteria.category && workout.category !== criteria.category) {
-                    matches = false;
+                    return false;
                 }
                 
                 // 2. Location Filter
                 if (criteria.location) {
                     // If the workout location is 'both', it satisfies any specific location filter
                     if (workout.location !== 'both' && workout.location !== criteria.location) {
-                        matches = false;
+                        return false;
                     }
                 }
                 
                 // 3. Minimum Duration Filter (NEW)
                 if (criteria.minDuration !== undefined && workout.duration_minutes < criteria.minDuration) {
-                    matches = false;
+                    return false;
                 }
 
                 // 4. Maximum Duration Filter (NEW)
                 if (criteria.maxDuration !== undefined && workout.duration_minutes > criteria.maxDuration) {
-                    matches = false;
+                    return false;
                 }
                 
-                return matches;
+                return true;
             });
             resolve(filtered);
         }, 100); // 100ms delay
