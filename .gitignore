@@ -61,7 +61,8 @@ __pycache__/
 venv/
 env/
 
-#Data & models
+# Data & models
+# Ignorer tous les dossiers data/ sauf src/data
 data/
 datasets/
 *.tfrecord
@@ -69,6 +70,7 @@ datasets/
 *.h5
 *.ckpt
 checkpoints/
+!src/data/
 
 # OS / editor
 .DS_Store
