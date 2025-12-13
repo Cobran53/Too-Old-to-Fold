@@ -25,6 +25,9 @@ type SettingField =
   | 'belowTempPref'
   | 'dataPref';
 
+
+/* options should likely be saved in LocalStorage */
+
 const SettingsPage: React.FC = () => {
   // Värden som visas i raderna
   const [sedentaryFreq, setSedentaryFreq] = useState('30 min');

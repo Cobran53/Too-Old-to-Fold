@@ -84,12 +84,12 @@ async function getUsers() {
 ## TODO
 1) Finish all web pages (static -> interactive -> dynamic)
    * Welcome (100% done)                                       -> Nolann V
-   * Dashboard (100% static, 50% interactive)                  -> Nolann
+   * Dashboard (100% static, 70% interactive)                  -> Nolann
    * Progress (100% static, 0% interactive)                    -> Lucas
    * Settings (90% static, 20% interactive)                    -> Lucas
    * Trainings (100% static, 0% interactive)                   -> Lucas
    * Calendar (100% static, 10% interactive)                   -> Lucas
-2) Make MySQL database (10%, workouts done)                    -> Nolann 
+2) Make MySQL database (done, it's empty)                      -> Nolann V
 3) Make app send notifications (requires 2) (0%)               -> Lucas
 4) Read sensors&weather api and write in DB (requires 2) (0%)  -> Nolann
 5) Make .tsfile export (0%)                                    -> Ludwig
