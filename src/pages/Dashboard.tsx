@@ -145,7 +145,7 @@ const Dashboard: React.FC = () => {
 
         {/* Weekly Goals */}
         <section className="weekly-goals">
-          <h3 className="section-title">Wekly Goals</h3>
+          <h3 className="section-title">Weekly Goals</h3>
 
           <IonGrid className="goals-container">
             <IonRow>
