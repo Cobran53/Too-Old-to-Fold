@@ -46,6 +46,41 @@
 - If you encounter issues with the Node.js version, update to the latest LTS version.
 - Refer to the [official Ionic documentation](https://ionicframework.com/docs) for more information.
 
+## Local database (SQLite)
+
+This project can use a local SQLite database for development. The added files are:
+
+- [db/schema.sql](db/schema.sql): database schema.
+- [scripts/init_db.js](scripts/init_db.js): Node script that creates `db/database.sqlite` and inserts sample data.
+- [src/services/sqlite.ts](src/services/sqlite.ts): Node helper to open the database from server-side code or scripts.
+
+Steps to initialize the local database:
+
+1. Install dependencies (added to `package.json`):
+```powershell
+npm install
+```
+2. Initialize the database (creates `db/database.sqlite`):
+```powershell
+npm run init-db
+```
+3. The database file will then be located at `db/database.sqlite`. Scripts and your Node code can open the DB using `src/services/sqlite.ts`.
+
+Notes:
+- The `init-db` script will not overwrite an existing database (so it is safe to reuse).
+
+To use the database, do something like 
+```js
+import openDb from '../services/sqlite';
+
+async function getUsers() {
+  const db = await openDb();
+  const users = await db.all('SELECT * FROM users');
+  await db.close();
+  return users;
+}
+```
+
 ## TODO
 1) Finish all web pages (static -> interactive -> dynamic)
    * Welcome (100% done)                                       -> Nolann V
