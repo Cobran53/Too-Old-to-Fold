@@ -16,6 +16,7 @@ import {
   IonSegment,
   IonSegmentButton,
   IonModal,
+  IonRange,
 } from '@ionic/react';
 
 import {
@@ -24,21 +25,27 @@ import {
   walkOutline,
   barbellOutline,
   closeOutline,
+  sunnyOutline,
+  homeOutline,
+  bodyOutline,
 } from 'ionicons/icons';
 
 import './TrainingList.css';
 import AppTabBar from '../components/AppTabBar';
 
 type WorkoutType = 'walking' | 'strength' | 'balance';
+type WorkoutLocation = 'outside' | 'inside';
 
 type Workout = {
   id: number;
   title: string;
-  duration: string;
+  duration: string;   // text som visas under titeln
+  minutes: number;    // ren siffra för filterlogik
   tag: string;
   description: string;
   image: string;
   type: WorkoutType;
+  location: WorkoutLocation;
 };
 
 const workouts: Workout[] = [
@@ -46,56 +53,86 @@ const workouts: Workout[] = [
     id: 1,
     title: 'Brisk walking',
     duration: '60 minutes · Walking',
+    minutes: 60,
     tag: 'For you',
     description: '7 km walk at a lively pace',
     image: '/walk.png',
     type: 'walking',
+    location: 'outside',
   },
   {
     id: 2,
     title: 'Safe steps',
     duration: '20 minutes · Balance',
+    minutes: 20,
     tag: 'At home',
     description: 'Simple at-home exercises to prevent falls',
     image: '/safesteps.png',
     type: 'balance',
+    location: 'inside',
   },
   {
     id: 3,
     title: 'Beginner Yoga',
     duration: '25 minutes · Strength',
+    minutes: 25,
     tag: 'For novices',
     description: 'Yoga poses adapted to novices, on a yoga rug',
     image: '/yoga.png',
     type: 'strength',
+    location: 'inside',
   },
   {
     id: 4,
     title: 'Stairs-based exercises',
     duration: '25 minutes · Balance',
+    minutes: 25,
     tag: 'Outside',
     description: 'Exercises using a step to help with balance',
     image: '/stairs.png',
     type: 'balance',
+    location: 'outside',
   },
 ];
 
 const TrainingListPage: React.FC = () => {
   const [searchText, setSearchText] = React.useState('');
-  const [activeFilter, setActiveFilter] = React.useState<'all' | WorkoutType>('all');
+  const [activeFilter, setActiveFilter] =
+    React.useState<'all' | WorkoutType>('all');
 
-  const [selectedWorkout, setSelectedWorkout] = React.useState<Workout | null>(null);
+  const [selectedWorkout, setSelectedWorkout] =
+    React.useState<Workout | null>(null);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
+  // NYTT: filterpanel-state
+  const [isFilterOpen, setIsFilterOpen] = React.useState(false);
+  const [locationFilter, setLocationFilter] =
+    React.useState<'any' | WorkoutLocation>('any');
+  const [durationRange, setDurationRange] = React.useState({
+    lower: 5,
+    upper: 200,
+  });
+
   const filteredWorkouts = workouts.filter((w) => {
-    const matchesSearch = w.title.toLowerCase().includes(searchText.toLowerCase());
+    const matchesSearch = w.title
+      .toLowerCase()
+      .includes(searchText.toLowerCase());
+
     const matchesType = activeFilter === 'all' ? true : w.type === activeFilter;
-    return matchesSearch && matchesType;
+
+    const matchesLocation =
+      locationFilter === 'any' ? true : w.location === locationFilter;
+
+    const matchesDuration =
+      w.minutes >= durationRange.lower && w.minutes <= durationRange.upper;
+
+    return matchesSearch && matchesType && matchesLocation && matchesDuration;
   });
 
   const getTypeIcon = (type: WorkoutType) => {
     if (type === 'walking') return walkOutline;
-    return barbellOutline;
+    if (type === 'strength') return barbellOutline;
+    return bodyOutline; // för balance
   };
 
   const openDetails = (workout: Workout) => {
@@ -108,17 +145,21 @@ const TrainingListPage: React.FC = () => {
     setSelectedWorkout(null);
   };
 
+  const avgDuration = Math.round(
+    (durationRange.lower + durationRange.upper) / 2
+  );
+
   return (
     <IonPage className="training-page">
-      {/* Scrollande innehåll */}
       <IonContent fullscreen className="training-content">
-        {/* Top-rad med titel + filter */}
+        {/* Top-rad med titel + filter-knapp */}
         <div className="training-top-row">
           <h1 className="training-title">Training</h1>
           <IonButton
             fill="clear"
             aria-label="Filter exercises"
             className="training-filter-button"
+            onClick={() => setIsFilterOpen((prev) => !prev)}
           >
             <IonIcon icon={funnelOutline} />
           </IonButton>
@@ -132,7 +173,114 @@ const TrainingListPage: React.FC = () => {
           onIonChange={(e) => setSearchText(e.detail.value ?? '')}
         />
 
-        {/* Segment / kategorier */}
+        {/* FILTERPANEL – visas när man klickat på filtret */}
+        {isFilterOpen && (
+          <div className="training-filter-panel">
+            {/* rad med filter-pills */}
+            <div className="training-filter-pill-row">
+              {/* Outside / Inside styr locationFilter */}
+              <button
+                className={`filter-pill ${
+                  locationFilter === 'outside' ? 'active' : ''
+                }`}
+                onClick={() =>
+                  setLocationFilter((prev) =>
+                    prev === 'outside' ? 'any' : 'outside'
+                  )
+                }
+              >
+                <IonIcon icon={sunnyOutline} className="filter-pill-icon" />
+                <span>Outside</span>
+              </button>
+
+              <button
+                className={`filter-pill ${
+                  locationFilter === 'inside' ? 'active' : ''
+                }`}
+                onClick={() =>
+                  setLocationFilter((prev) =>
+                    prev === 'inside' ? 'any' : 'inside'
+                  )
+                }
+              >
+                <IonIcon icon={homeOutline} className="filter-pill-icon" />
+                <span>Inside</span>
+              </button>
+
+              {/* Dessa tre styr activeFilter (typ) */}
+              <button
+                className={`filter-pill ${
+                  activeFilter === 'walking' ? 'active' : ''
+                }`}
+                onClick={() =>
+                  setActiveFilter((prev) =>
+                    prev === 'walking' ? 'all' : 'walking'
+                  )
+                }
+              >
+                <IonIcon icon={walkOutline} className="filter-pill-icon" />
+                <span>Walking</span>
+              </button>
+
+              <button
+                className={`filter-pill ${
+                  activeFilter === 'balance' ? 'active' : ''
+                }`}
+                onClick={() =>
+                  setActiveFilter((prev) =>
+                    prev === 'balance' ? 'all' : 'balance'
+                  )
+                }
+              >
+                <IonIcon icon={bodyOutline} className="filter-pill-icon" />
+                <span>Balance</span>
+              </button>
+
+              <button
+                className={`filter-pill ${
+                  activeFilter === 'strength' ? 'active' : ''
+                }`}
+                onClick={() =>
+                  setActiveFilter((prev) =>
+                    prev === 'strength' ? 'all' : 'strength'
+                  )
+                }
+              >
+                <IonIcon icon={barbellOutline} className="filter-pill-icon" />
+                <span>Strength</span>
+              </button>
+            </div>
+
+            {/* Duration-slider */}
+            <div className="training-filter-range">
+              <div className="filter-duration-chip">{avgDuration} min</div>
+
+              <IonRange
+                dualKnobs
+                min={5}
+                max={200}
+                step={5}
+                value={durationRange}
+                onIonChange={(e) => {
+                  const v = e.detail.value as any;
+                  if (v && typeof v === 'object') {
+                    setDurationRange({
+                      lower: v.lower,
+                      upper: v.upper,
+                    });
+                  }
+                }}
+              />
+
+              <div className="filter-duration-bounds">
+                <span>{durationRange.lower} min</span>
+                <span>{durationRange.upper} min</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Segment / kategorier – kan behållas som snabbfilter ovanpå panelen */}
         <IonSegment
           value={activeFilter}
           onIonChange={(e) =>
@@ -182,7 +330,9 @@ const TrainingListPage: React.FC = () => {
               </IonCardHeader>
 
               <IonCardContent className="training-card-content">
-                <p className="training-card-description">{workout.description}</p>
+                <p className="training-card-description">
+                  {workout.description}
+                </p>
 
                 <IonItem lines="none" className="training-card-footer">
                   <IonIcon slot="start" icon={getTypeIcon(workout.type)} />
@@ -234,7 +384,6 @@ const TrainingListPage: React.FC = () => {
         </IonModal>
       </IonContent>
 
-      {/* Botten-navigering – samma komponent som på Dashboard */}
       <AppTabBar selectedTab="training" />
     </IonPage>
   );

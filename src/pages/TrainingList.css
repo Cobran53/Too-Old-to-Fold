@@ -204,3 +204,81 @@ IonList {
   color: #ffffff;
 }
 
+/* ---------- FILTERPANEL ---------- */
+
+.training-filter-panel {
+  margin-bottom: 14px;
+  padding: 10px 12px 14px;
+  border-radius: 18px;
+  background: #f0f0f2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* rad med pills */
+.training-filter-pill-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.filter-pill {
+  flex: 1;
+  border: none;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 6px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-family: 'Sanchez', Arial, sans-serif;
+  font-size: 11px;
+  color: #444444;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.filter-pill-icon {
+  font-size: 16px;
+}
+
+.filter-pill.active {
+  background: #2b395d;
+  color: #ffffff;
+}
+
+.filter-pill.active .filter-pill-icon {
+  color: #ffffff;
+}
+
+/* duration-del */
+.training-filter-range {
+  margin-top: 4px;
+}
+
+.filter-duration-chip {
+  display: inline-block;
+  margin: 0 auto 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: #c2986d;
+  color: #ffffff;
+  font-size: 12px;
+}
+
+/* styling på själva range-komponenten */
+.training-filter-panel ion-range {
+  --bar-background: #d2d2d7;
+  --bar-background-active: #c2986d;
+  --knob-background: #c2986d;
+  --knob-size: 18px;
+}
+
+/* min / max text under slidern */
+.filter-duration-bounds {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2px;
+  font-size: 11px;
+  color: #555555;
+}
+
