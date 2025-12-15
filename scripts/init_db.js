@@ -27,6 +27,19 @@ if (!fs.existsSync(schemaPath)) {
 
 const schemaSql = fs.readFileSync(schemaPath, 'utf8');
 
+// Try to read seed data from src/data/workouts.json (exported from YAML / source of truth)
+const seedJsonPath = path.resolve(__dirname, '..', 'src', 'data', 'workouts.json');
+let seedData = null;
+if (fs.existsSync(seedJsonPath)) {
+  try {
+    seedData = JSON.parse(fs.readFileSync(seedJsonPath, 'utf8'));
+  } catch (e) {
+    console.error('Failed to parse workouts.json seed file:', e.message);
+  }
+} else {
+  console.warn('No workouts.json seed file found at', seedJsonPath);
+}
+
 const db = new sqlite3.Database(dbFile, (err) => {
   if (err) {
     console.error('Error creating DB:', err.message);
@@ -40,14 +53,32 @@ const db = new sqlite3.Database(dbFile, (err) => {
       process.exit(1);
     }
 
-    // Example seed
-    const stmt = db.prepare('INSERT INTO workouts (title, duration, metadata) VALUES (?, ?, ?)');
-    stmt.run('Morning walk', 20, JSON.stringify({ intensity: 'low' }));
-    stmt.run('Back strengthening', 15, JSON.stringify({ intensity: 'medium' }));
-    stmt.finalize((err) => {
-      if (err) console.error('Seed error:', err.message);
-      else console.log('Initial seed done.');
+    // Seed from workouts.json if available
+    if (seedData && Array.isArray(seedData.workouts) && seedData.workouts.length > 0) {
+      const stmt = db.prepare('INSERT INTO workouts (title, duration, metadata) VALUES (?, ?, ?)');
+      for (const w of seedData.workouts) {
+        const title = w.name || w.title || 'Untitled';
+        const duration = typeof w.duration_minutes === 'number' ? w.duration_minutes : (w.duration || 0);
+        // Store remaining fields in metadata JSON for flexibility
+        const metadata = {
+          uid: w.id,
+          length: w.length,
+          link_to_page: w.link_to_page,
+          link_to_image: w.link_to_image,
+          location: w.location,
+          category: w.category,
+          description: w.description
+        };
+        stmt.run(title, duration, JSON.stringify(metadata));
+      }
+      stmt.finalize((err) => {
+        if (err) console.error('Seed error:', err.message);
+        else console.log('Initial seed done from workouts.json.');
+        db.close();
+      });
+    } else {
+      console.log('No seed data available; skipping initial seed.');
       db.close();
-    });
+    }
   });
 });

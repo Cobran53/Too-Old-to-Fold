@@ -1,8 +1,8 @@
 // src/hooks/useWorkouts.ts
 
 import { useState, useEffect } from 'react';
-// Assuming you have configured your project to handle YAML imports correctly
-import workoutsYamlData from '../data/workouts.yaml'; 
+// Fallback for web (static JSON export)
+import workoutsJsonData from '../data/workouts.json';
 
 
 // --- 1. DEFINE TYPES (Based on your YAML structure) ---
@@ -23,9 +23,8 @@ export interface Workout {
 }
 
 
-// --- 2. Data Source
-// Ensure workoutsYamlData.workouts is correctly typed as an array of Workout objects
-const WORKOUTS_DATA: Workout[] = workoutsYamlData.workouts || [];
+// --- 2. Data Source (read from DB)
+// We'll load rows from the `workouts` table and map them to `Workout` objects.
 
 
 // --- 3. UPDATED WorkoutCriteria INTERFACE
@@ -41,39 +40,55 @@ interface WorkoutCriteria {
  * @param criteria - An object containing filtering parameters.
  * @returns A promise resolving to the filtered list of Workouts.
  */
-const fetchFilteredWorkouts = (criteria: WorkoutCriteria): Promise<Workout[]> => {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            const filtered = WORKOUTS_DATA.filter(workout => {
-                // 1. Category Filter
-                if (criteria.category && workout.category !== criteria.category) {
-                    return false;
-                }
-                
-                // 2. Location Filter
-                if (criteria.location) {
-                    // If the workout location is 'both', it satisfies any specific location filter
-                    if (workout.location !== 'both' && workout.location !== criteria.location) {
-                        return false;
-                    }
-                }
-                
-                // 3. Minimum Duration Filter (NEW)
-                if (criteria.minDuration !== undefined && workout.duration_minutes < criteria.minDuration) {
-                    return false;
-                }
-
-                // 4. Maximum Duration Filter (NEW)
-                if (criteria.maxDuration !== undefined && workout.duration_minutes > criteria.maxDuration) {
-                    return false;
-                }
-                
-                return true;
-            });
-            resolve(filtered);
-        }, 100); // 100ms delay
+const fetchFilteredWorkouts = async (criteria: WorkoutCriteria): Promise<Workout[]> => {
+    // Helper pour filtrer
+    const applyFilters = (items: Workout[]) => items.filter(workout => {
+        if (criteria.category && workout.category !== criteria.category) return false;
+        if (criteria.location) {
+            if (workout.location !== 'both' && workout.location !== criteria.location) return false;
+        }
+        if (criteria.minDuration !== undefined && workout.duration_minutes < criteria.minDuration) return false;
+        if (criteria.maxDuration !== undefined && workout.duration_minutes > criteria.maxDuration) return false;
+        return true;
     });
+
+    try {
+        // Utilise la logique multiplateforme de openDb
+        const openDb = (await import('./sqlite')).default;
+        const db = await openDb();
+        if (db && typeof db.all === 'function') {
+            // SQLite natif ou Capacitor
+            const rows: Array<{ title: string; duration: number; metadata: string }> = await db.all(
+                'SELECT title, duration, metadata FROM workouts'
+            );
+            if (typeof db.close === 'function') await db.close();
+            const mapped = rows.map(r => mapRowToWorkout(r.title, r.duration, r.metadata));
+            return applyFilters(mapped);
+        }
+        // Si pas de base, ne retourne rien
+        return [];
+    } catch (error) {
+        console.error('Error fetching workouts:', error);
+        return [];
+    }
 };
+
+// Helper to map DB row to Workout
+function mapRowToWorkout(title: string, duration: number, metadata: string): Workout {
+    let meta: any = {};
+    try { meta = typeof metadata === 'string' ? JSON.parse(metadata) : (metadata || {}); } catch (e) { meta = {}; }
+    return {
+        name: title,
+        id: meta.uid || String(Math.random()).slice(2),
+        length: meta.length || 'N/A',
+        link_to_page: meta.link_to_page || '/',
+        link_to_image: meta.link_to_image,
+        duration_minutes: typeof duration === 'number' ? duration : (meta.duration_minutes || 0),
+        location: (meta.location || 'inside') as WorkoutLocation,
+        category: (meta.category || 'strength') as WorkoutCategory,
+        description: meta.description || ''
+    };
+}
 
 // --- 4. THE REACT HOOK (Manages State and Calls Logic) ---
 

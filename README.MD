@@ -69,18 +69,6 @@ npm run init-db
 Notes:
 - The `init-db` script will not overwrite an existing database (so it is safe to reuse).
 
-To use the database, do something like 
-```js
-import openDb from '../services/sqlite';
-
-async function getUsers() {
-  const db = await openDb();
-  const users = await db.all('SELECT * FROM users');
-  await db.close();
-  return users;
-}
-```
-
 ## TODO
 1) Finish all web pages (static -> interactive -> dynamic)
    * Welcome (100% done)                                       -> Nolann V
