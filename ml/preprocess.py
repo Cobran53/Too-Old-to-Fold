@@ -32,7 +32,7 @@ def load_split(split: str):
         sep=r"\s+",
     ).values.squeeze()
 
-    # Shift labels to 0–5 instead of 1–6 (important for sparse_categorical_crossentropy)
+    # Shift labels to 0–5 instead of 1–6 for convenience
     y = y - 1
 
     return X, y
@@ -58,7 +58,7 @@ def preprocess():
     np.save(os.path.join(PROCESSED_DIR, "y_train.npy"), y_train)
     np.save(os.path.join(PROCESSED_DIR, "y_test.npy"), y_test)
 
-    print("✅ Preprocessing complete. Data saved in ml/data/processed")
+    print("Preprocessing complete. Data saved in ml/data/processed")
 
 
 if __name__ == "__main__":

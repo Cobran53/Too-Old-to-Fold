@@ -33,9 +33,8 @@ for i, j in enumerate(idx):
 correct = np.sum(y_pred_labels == y_rand_true)
 print(f"\n Mini accuracy preview: {correct}/100 correct = {(correct/100)*100:.1f}%")
 
-# ================================================================
-# 1️⃣ Confusion Matrix for 100 Random Predictions
-# ================================================================
+
+# Confusion Matrix for 100 Random Predictions
 class_names = [
     "WALKING",
     "WALKING_UPSTAIRS",
@@ -60,13 +59,12 @@ sns.heatmap(cm, annot=True, fmt="d", cmap="Blues",
 
 plt.xlabel("Predicted Class", fontsize=14)
 plt.ylabel("True Class", fontsize=14)
-plt.title("Confusion Matrix for HAR GRU Model", fontsize=16)
+plt.title("Confusion Matrix for GRU Model", fontsize=16)
 plt.tight_layout()
 plt.show()
 
-# ================================================================
-# 2️⃣ Class Distribution of Predictions
-# ================================================================
+
+#  Class Distribution of Predictions
 plt.figure(figsize=(6,4))
 plt.hist(y_pred_labels, bins=np.arange(8)-0.5, rwidth=0.7)
 plt.xticks(range(6))
@@ -77,9 +75,6 @@ plt.tight_layout()
 plt.show()
 
 
-
-# ================================================================
-# 4️⃣ Full Test Accuracy
-# ================================================================
+#  Full Test Accuracy
 test_loss, test_acc = model.evaluate(X_test, y_test, verbose=1)
 print(f"\nFull test accuracy = {test_acc:.4f}")
