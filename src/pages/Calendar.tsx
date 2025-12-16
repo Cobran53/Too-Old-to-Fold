@@ -1,4 +1,3 @@
-//TODO DOES NOT WORK
 import React from 'react';
 import {
   IonPage,
@@ -9,48 +8,47 @@ import {
   IonButton,
   IonIcon,
 } from '@ionic/react';
-import {
-  arrowBackOutline,
-  flame,
-} from 'ionicons/icons';
+import { arrowBackOutline, flameOutline } from 'ionicons/icons';
+
 import './Calendar.css';
 
 const Calendar: React.FC = () => {
   return (
     <IonPage className="statsPage">
       <IonContent fullscreen>
-        {/* --- Calendar Section (Dark Background) --- */}
+        {/* --- Calendar Section (beige bakgrund) --- */}
         <div className="calendarContainer">
           <IonHeader className="ion-no-border headerTransparent">
             <IonToolbar>
               <IonButtons slot="start">
-                <IonButton 
-                    fill="clear" 
-                    color="light" 
-                    routerLink="/dashboard" 
-                    routerDirection="back"
+                {/* Tillbaka till dashboard/home */}
+                <IonButton
+                  fill="clear"
+                  color="light"
+                  routerLink="/dashboard"
+                  routerDirection="back"
                 >
                   <IonIcon icon={arrowBackOutline} className="backIcon" />
                 </IonButton>
               </IonButtons>
+
               <IonButtons slot="end">
                 <div className="streakBadge">
-                  <IonIcon icon={flame} className="flameIcon" />
+                  <IonIcon icon={flameOutline} className="flameIcon" />
                   <span className="streakNumber">3</span>
                 </div>
               </IonButtons>
             </IonToolbar>
           </IonHeader>
 
-          {/* Date Info */}
+          {/* Datumtext */}
           <div className="dateInfo">
-            <p>Thursday</p>
-            <h1>11 December</h1>
+            <p>Wednesday</p>
+            <h1>12 December</h1>
           </div>
 
-          {/* Calendar Grid */}
+          {/* Kalendern (datumrutorna) */}
           <div className="calendarGrid">
-            {/* Week 1 */}
             <div className="day">1</div>
             <div className="day">2</div>
             <div className="day">3</div>
@@ -59,16 +57,14 @@ const Calendar: React.FC = () => {
             <div className="day completedDay">6</div>
             <div className="day">7</div>
 
-            {/* Week 2 */}
             <div className="day completedDay">8</div>
             <div className="day completedDay currentStreak">9</div>
             <div className="day completedDay currentStreak">10</div>
             <div className="day completedDay currentStreak">11</div>
-            <div className="day currentDay">12</div> {/* Underlined */}
+            <div className="day currentDay">12</div>
             <div className="day">13</div>
             <div className="day">14</div>
 
-            {/* Week 3 */}
             <div className="day">15</div>
             <div className="day">16</div>
             <div className="day">17</div>
@@ -77,7 +73,6 @@ const Calendar: React.FC = () => {
             <div className="day">20</div>
             <div className="day">21</div>
 
-            {/* Week 4 */}
             <div className="day">22</div>
             <div className="day">23</div>
             <div className="day">24</div>
@@ -86,25 +81,24 @@ const Calendar: React.FC = () => {
             <div className="day">27</div>
             <div className="day">28</div>
 
-            {/* Week 5 */}
             <div className="day">29</div>
             <div className="day">30</div>
             <div className="day">31</div>
           </div>
 
-          {/* Day Labels */}
+          {/* Veckodagar längst ned, enligt Figma (Sat → Fri) */}
           <div className="dayLabels">
+            <span>Sat</span>
+            <span>Sun</span>
             <span>Mon</span>
             <span>Tue</span>
             <span>Wed</span>
             <span>Thr</span>
             <span>Fri</span>
-            <span>Sat</span>
-            <span>Sun</span>
           </div>
         </div>
 
-        {/* --- My Stats Section (Dark Blue Background) --- */}
+        {/* --- My Stats (mörkblå del) --- */}
         <div className="statsContainer">
           <h2 className="statsTitle">My Stats</h2>
           <div className="statsGrid">

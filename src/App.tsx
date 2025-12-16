@@ -1,13 +1,13 @@
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, IonTabs, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
+
 import Navigation from './pages/Navigation';
 import Welcome from './pages/Welcome';
 import Dashboard from './pages/Dashboard';
 import TrainingListPage from './pages/TrainingListPage';
 import Progress from './pages/Progress';
 import Calendar from './pages/Calendar';
-import SettingsPage from './pages/SettingsPage';   // <-- NY IMPORT
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -17,7 +17,7 @@ import '@ionic/react/css/normalize.css';
 import '@ionic/react/css/structure.css';
 import '@ionic/react/css/typography.css';
 
-/* Optional CSS utils that can be commented out */
+/* Optional CSS utils */
 import '@ionic/react/css/padding.css';
 import '@ionic/react/css/float-elements.css';
 import '@ionic/react/css/text-alignment.css';
@@ -25,12 +25,11 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
-/* Dark mode */
+/* Dark mode (system) */
 import '@ionic/react/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
-
 import './App.css';
 
 setupIonicReact();
@@ -63,11 +62,9 @@ const App: React.FC = () => (
           <Route exact path="/progress">
             <Progress />
           </Route>
+
           <Route exact path="/calendar">
             <Calendar />
-          </Route>
-          <Route exact path="/settings">
-            <SettingsPage />
           </Route>
         </IonRouterOutlet>
       </IonTabs>

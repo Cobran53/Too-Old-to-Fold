@@ -1,3 +1,25 @@
+/* Global font */
 * {
   font-family: "Sanchez", Arial, sans-serif;
+}
+
+/* Fyll hela fönstret och ta bort browser-scrollbaren */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  overflow: hidden;      /* ingen grå scrollbar runt appen */
+  background: #111;      /* mörk bakgrund runt "telefonen" */
+}
+
+/* Se till att Ionic fyller höjden */
+ion-app,
+ion-router-outlet,
+ion-page {
+  height: 100%;
 }
