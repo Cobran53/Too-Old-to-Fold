@@ -7,6 +7,7 @@ import Welcome from './pages/Welcome';
 import Dashboard from './pages/Dashboard';
 import TrainingListPage from './pages/TrainingListPage';
 import Progress from './pages/Progress';
+import SettingsPage from './pages/SettingsPage';
 import Calendar from './pages/Calendar';
 
 /* Core CSS required for Ionic components to work properly */
@@ -17,7 +18,7 @@ import '@ionic/react/css/normalize.css';
 import '@ionic/react/css/structure.css';
 import '@ionic/react/css/typography.css';
 
-/* Optional CSS utils */
+/* Optional CSS utils that can be commented out */
 import '@ionic/react/css/padding.css';
 import '@ionic/react/css/float-elements.css';
 import '@ionic/react/css/text-alignment.css';
@@ -25,7 +26,7 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
-/* Dark mode (system) */
+/* Dark mode */
 import '@ionic/react/css/palettes/dark.system.css';
 
 /* Theme variables */
@@ -39,6 +40,7 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
+          {/* Start / navigation flow */}
           <Route exact path="/navigation">
             <Navigation />
           </Route>
@@ -51,6 +53,7 @@ const App: React.FC = () => (
             <Welcome />
           </Route>
 
+          {/* Huvudsidor */}
           <Route exact path="/dashboard">
             <Dashboard />
           </Route>
@@ -61,6 +64,11 @@ const App: React.FC = () => (
 
           <Route exact path="/progress">
             <Progress />
+          </Route>
+
+          {/* Settings & Calendar */}
+          <Route exact path="/settings">
+            <SettingsPage />
           </Route>
 
           <Route exact path="/calendar">

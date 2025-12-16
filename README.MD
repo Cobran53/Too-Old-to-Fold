@@ -73,7 +73,7 @@ Notes:
 1) Finish all web pages (static -> interactive -> dynamic)
    * Welcome (100% done)                                                 -> Nolann V
    * Dashboard (100% static, 70% interactive)                            -> Nolann
-   * Progress (100% static, 0% interactive)                              -> Lucas (on hold)
+   * Progress (100% static, 100% interactive)                            -> Lucas V
    * Settings (90% static, 20% interactive)                              -> Lucas
    * Trainings (100% static, 0% interactive)                             -> Lucas
    * Calendar (100% static, 10% interactive)                             -> Lucas (on hold)
