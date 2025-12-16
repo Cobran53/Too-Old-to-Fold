@@ -34,12 +34,7 @@
      ionic capacitor add ios
      ```
 
-5. **Generate Icons and Splash Screens (Optional)**:
-   ```powershell
-   cordova-res --skip-config --copy
-   ```
-
-6. **Explore the Application**:
+5. **Explore the Application**:
    - Once the server is running, open your browser and go to the displayed URL (default: `http://localhost:8100`).
 
 ## Additional Notes
