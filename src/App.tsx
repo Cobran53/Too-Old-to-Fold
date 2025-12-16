@@ -9,6 +9,8 @@ import TrainingListPage from './pages/TrainingListPage';
 import Progress from './pages/Progress';
 import SettingsPage from './pages/SettingsPage';
 import Calendar from './pages/Calendar';
+import { useEffect } from 'react';
+import { initDatabase } from './services/initDatabase';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -35,49 +37,54 @@ import './App.css';
 
 setupIonicReact();
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonTabs>
-        <IonRouterOutlet>
-          {/* Start / navigation flow */}
-          <Route exact path="/navigation">
-            <Navigation />
-          </Route>
+const App: React.FC = () => {
+  useEffect(() => {
+    initDatabase();
+  }, []);
 
-          <Route exact path="/">
-            <Redirect to="/navigation" />
-          </Route>
+  return (
+    <IonApp>
+      <IonReactRouter>
+        <IonTabs>
+          <IonRouterOutlet>
+            {/* Start / navigation flow */}
+            <Route exact path="/navigation">
+              <Navigation />
+            </Route>
 
-          <Route exact path="/welcome">
-            <Welcome />
-          </Route>
+            <Route exact path="/">
+              <Redirect to="/navigation" />
+            </Route>
 
-          {/* Huvudsidor */}
-          <Route exact path="/dashboard">
-            <Dashboard />
-          </Route>
+            <Route exact path="/welcome">
+              <Welcome />
+            </Route>
 
-          <Route exact path="/training-list">
-            <TrainingListPage />
-          </Route>
+            {/* Huvudsidor */}
+            <Route exact path="/dashboard">
+              <Dashboard />
+            </Route>
+            <Route exact path="/training-list">
+              <TrainingListPage />
+            </Route>
 
-          <Route exact path="/progress">
-            <Progress />
-          </Route>
+            <Route exact path="/progress">
+              <Progress />
+            </Route>
 
-          {/* Settings & Calendar */}
-          <Route exact path="/settings">
-            <SettingsPage />
-          </Route>
+            {/* Settings & Calendar */}
+            <Route exact path="/settings">
+              <SettingsPage />
+            </Route>
 
-          <Route exact path="/calendar">
-            <Calendar />
-          </Route>
-        </IonRouterOutlet>
-      </IonTabs>
-    </IonReactRouter>
-  </IonApp>
-);
+            <Route exact path="/calendar">
+              <Calendar />
+            </Route>
+          </IonRouterOutlet>
+        </IonTabs>
+      </IonReactRouter>
+    </IonApp>
+  );
+};
 
 export default App;

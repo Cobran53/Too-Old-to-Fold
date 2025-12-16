@@ -31,9 +31,12 @@ async function openDbCapacitor() {
   const { CapacitorSQLite, SQLiteConnection } = mod;
   const sqliteConn = new SQLiteConnection(CapacitorSQLite);
   const dbName = 'appdb';
-  await sqliteConn.createConnection(dbName, false, 'no-encryption', 1);
-  const db = await sqliteConn.open(dbName);
-  // Log détaillé pour debug Android
+  await sqliteConn.createConnection(dbName, false, 'no-encryption', 1, false);
+    const db = await sqliteConn.retrieveConnection(dbName, false);
+    if (typeof db.open === 'function') {
+      await db.open();
+    }
+  // Log pour debug Android
   console.log('[openDbCapacitor] db:', db);
   console.log('[openDbCapacitor] sqliteConn:', sqliteConn);
   // On retourne un objet qui expose une API compatible (all, run, etc.)
@@ -44,7 +47,7 @@ async function openDbCapacitor() {
       return (res && (res.values || res.rows || res.results)) || [];
     },
     run: async (query, params) => db.run(query, params),
-    close: async () => sqliteConn.closeConnection(dbName),
+    close: async () => sqliteConn.closeConnection(dbName, false),
   };
 }
 
