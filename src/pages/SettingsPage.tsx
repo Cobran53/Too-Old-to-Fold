@@ -25,9 +25,6 @@ type SettingField =
   | 'belowTempPref'
   | 'dataPref';
 
-
-/* options should likely be saved in LocalStorage */
-
 const SettingsPage: React.FC = () => {
   // Värden som visas i raderna
   const [sedentaryFreq, setSedentaryFreq] = useState('30 min');
@@ -42,7 +39,6 @@ const SettingsPage: React.FC = () => {
   // vilken rad som har “dropdown” öppen
   const [activeField, setActiveField] = useState<SettingField | null>(null);
 
-  // Alternativ som visas i dropdownen
   const getFieldOptions = (field: SettingField): string[] => {
     switch (field) {
       case 'sedentary':
@@ -91,7 +87,6 @@ const SettingsPage: React.FC = () => {
     setActiveField(null);
   };
 
-  // små helpers för +/–
   const decreaseTemp = () => {
     setMinTemp((t) => Math.max(-10, t - 1));
   };
@@ -100,7 +95,6 @@ const SettingsPage: React.FC = () => {
     setMinTemp((t) => Math.min(30, t + 1));
   };
 
-  // renderar dropdown direkt under en rad
   const renderDropdown = (field: SettingField) => {
     if (activeField !== field) return null;
 
@@ -140,9 +134,10 @@ const SettingsPage: React.FC = () => {
 
       <IonContent fullscreen className="settings-content">
         {/* --- Notifications --- */}
-        <section className="settings-section">
+        <section className="settings-section settings-section-first">
           <h2 className="settings-section-title">Notifications</h2>
 
+          {/* Frequency of sedentarity warnings */}
           <div className="settings-row">
             <div className="settings-row-text">
               <span className="settings-row-label">
@@ -163,6 +158,7 @@ const SettingsPage: React.FC = () => {
           </div>
           {renderDropdown('sedentary')}
 
+          {/* Workout reminders */}
           <div className="settings-row">
             <div className="settings-row-text">
               <span className="settings-row-label">Workout reminders</span>
