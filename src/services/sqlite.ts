@@ -33,10 +33,14 @@ async function openDbCapacitor() {
   const dbName = 'appdb';
   await sqliteConn.createConnection(dbName, false, 'no-encryption', 1);
   const db = await sqliteConn.open(dbName);
+  // Log détaillé pour debug Android
+  console.log('[openDbCapacitor] db:', db);
+  console.log('[openDbCapacitor] sqliteConn:', sqliteConn);
   // On retourne un objet qui expose une API compatible (all, run, etc.)
   return {
     all: async (query, params) => {
       const res = await db.query(query, params);
+      console.log('[openDbCapacitor] all() result:', res);
       return (res && (res.values || res.rows || res.results)) || [];
     },
     run: async (query, params) => db.run(query, params),
@@ -44,9 +48,11 @@ async function openDbCapacitor() {
   };
 }
 
-// Web fallback: lève une erreur explicite (ce cas ne doit pas arriver)
+// Web fallback: renvoie null (ou on pourrait charger un JSON statique)
 async function openDbWeb() {
-  throw new Error('openDb: Should not be called on web platform.');
+  // Ici, on pourrait charger un JSON ou retourner null
+  
+  return null;
 }
 
 /**
