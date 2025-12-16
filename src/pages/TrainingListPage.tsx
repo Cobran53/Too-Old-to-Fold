@@ -104,7 +104,7 @@ const TrainingListPage: React.FC = () => {
     React.useState<Workout | null>(null);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
-  // NYTT: filterpanel-state
+  // Filterpanel-state
   const [isFilterOpen, setIsFilterOpen] = React.useState(false);
   const [locationFilter, setLocationFilter] =
     React.useState<'any' | WorkoutLocation>('any');
@@ -112,6 +112,12 @@ const TrainingListPage: React.FC = () => {
     lower: 5,
     upper: 200,
   });
+
+  const handleClearFilters = () => {
+    setLocationFilter('any');
+    setActiveFilter('all');
+    setDurationRange({ lower: 5, upper: 200 });
+  };
 
   const filteredWorkouts = workouts.filter((w) => {
     const matchesSearch = w.title
@@ -132,7 +138,7 @@ const TrainingListPage: React.FC = () => {
   const getTypeIcon = (type: WorkoutType) => {
     if (type === 'walking') return walkOutline;
     if (type === 'strength') return barbellOutline;
-    return bodyOutline; // för balance
+    return bodyOutline; // balance
   };
 
   const openDetails = (workout: Workout) => {
@@ -176,6 +182,18 @@ const TrainingListPage: React.FC = () => {
         {/* FILTERPANEL – visas när man klickat på filtret */}
         {isFilterOpen && (
           <div className="training-filter-panel">
+            {/* liten header i boxen */}
+            <div className="training-filter-header">
+              <span className="filter-title">Filters</span>
+              <button
+                className="filter-clear-btn"
+                type="button"
+                onClick={handleClearFilters}
+              >
+                Clear
+              </button>
+            </div>
+
             {/* rad med filter-pills */}
             <div className="training-filter-pill-row">
               {/* Outside / Inside styr locationFilter */}
@@ -280,7 +298,7 @@ const TrainingListPage: React.FC = () => {
           </div>
         )}
 
-        {/* Segment / kategorier – kan behållas som snabbfilter ovanpå panelen */}
+        {/* Segment / kategorier – snabbfilter */}
         <IonSegment
           value={activeFilter}
           onIonChange={(e) =>
@@ -302,6 +320,11 @@ const TrainingListPage: React.FC = () => {
             <IonLabel>Balance</IonLabel>
           </IonSegmentButton>
         </IonSegment>
+
+        {/* lite info om hur många träningar som matchar */}
+        <p className="training-results-info">
+          Showing {filteredWorkouts.length} of {workouts.length} workouts
+        </p>
 
         {/* Lista med träningspass */}
         <IonList lines="none" className="training-list">
@@ -345,6 +368,12 @@ const TrainingListPage: React.FC = () => {
               </IonCardContent>
             </IonCard>
           ))}
+
+          {filteredWorkouts.length === 0 && (
+            <p className="training-empty-text">
+              No workouts match your filters yet.
+            </p>
+          )}
         </IonList>
 
         {/* Modal för detaljer */}
@@ -377,6 +406,16 @@ const TrainingListPage: React.FC = () => {
                   onClick={closeDetails}
                 >
                   Start this workout
+                </IonButton>
+
+                <IonButton
+                  expand="block"
+                  fill="clear"
+                  style={{ marginTop: 4 }}
+                  onClick={closeDetails}
+                >
+                  <IonIcon slot="start" icon={closeOutline} />
+                  Close
                 </IonButton>
               </>
             )}

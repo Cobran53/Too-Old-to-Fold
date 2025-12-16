@@ -1,4 +1,4 @@
-/* Samma känsla som Dashboard/Training */
+/* Telefonram / layout */
 .settings-page {
   --ion-background-color: #e8e8e8;
   width: 375px;
@@ -12,7 +12,7 @@
 .settings-content {
   --padding-start: 24px;
   --padding-end: 24px;
-  --padding-top: 0;
+  --padding-top: 32px;     
   --padding-bottom: 24px;
   background-color: #f3f3f3;
 }
@@ -67,6 +67,10 @@
   border-bottom: 1px solid #d0d0d0;
 }
 
+.settings-section-first {
+  margin-top: 0;             
+}
+
 .settings-section-title {
   font-size: 18px;
   font-weight: 600;
@@ -104,6 +108,7 @@
   font-size: 14px;
   color: #8c8c8c;
   padding: 0;
+  cursor: pointer;
 }
 
 .settings-row-value ion-icon {
@@ -130,6 +135,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 .settings-counter-button ion-icon {
@@ -174,6 +180,7 @@
   font-family: 'Sanchez', Arial, sans-serif;
   font-size: 14px;
   color: #333333;
+  cursor: pointer;
 }
 
 .settings-inline-option-button:hover {

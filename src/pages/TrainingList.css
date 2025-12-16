@@ -34,6 +34,7 @@ IonList {
   background-color: #e8e8e8;
 }
 
+
 /* --- Toprad: titel + filter --- */
 .training-top-row {
   display: flex;
@@ -282,3 +283,40 @@ IonList {
   color: #555555;
 }
 
+/* header i filterpanelen */
+.training-filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.filter-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #444444;
+}
+
+.filter-clear-btn {
+  border: none;
+  background: transparent;
+  font-size: 11px;
+  color: #c2986d;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* text under segmentet: "Showing X of Y..." */
+.training-results-info {
+  margin: 4px 0 8px;
+  font-size: 11px;
+  color: #666666;
+}
+
+/* text när inga pass matchar */
+.training-empty-text {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #666666;
+  text-align: center;
+}
