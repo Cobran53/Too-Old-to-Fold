@@ -1,13 +1,14 @@
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, IonTabs, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
+
 import Navigation from './pages/Navigation';
 import Welcome from './pages/Welcome';
 import Dashboard from './pages/Dashboard';
 import TrainingListPage from './pages/TrainingListPage';
 import Progress from './pages/Progress';
+import SettingsPage from './pages/SettingsPage';
 import Calendar from './pages/Calendar';
-import SettingsPage from './pages/SettingsPage';   // <-- NY IMPORT
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -30,7 +31,6 @@ import '@ionic/react/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
-
 import './App.css';
 
 setupIonicReact();
@@ -40,6 +40,7 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
+          {/* Start / navigation flow */}
           <Route exact path="/navigation">
             <Navigation />
           </Route>
@@ -52,6 +53,7 @@ const App: React.FC = () => (
             <Welcome />
           </Route>
 
+          {/* Huvudsidor */}
           <Route exact path="/dashboard">
             <Dashboard />
           </Route>
@@ -63,11 +65,14 @@ const App: React.FC = () => (
           <Route exact path="/progress">
             <Progress />
           </Route>
-          <Route exact path="/calendar">
-            <Calendar />
-          </Route>
+
+          {/* Settings & Calendar */}
           <Route exact path="/settings">
             <SettingsPage />
+          </Route>
+
+          <Route exact path="/calendar">
+            <Calendar />
           </Route>
         </IonRouterOutlet>
       </IonTabs>

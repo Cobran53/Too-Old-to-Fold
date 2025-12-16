@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   IonPage,
   IonContent,
@@ -8,146 +8,246 @@ import {
   IonButtons,
   IonButton,
   IonIcon,
-  IonSelect,
-  IonSelectOption,
-  IonFooter,
 } from '@ionic/react';
+
 import {
   calendarOutline,
-  addCircle,
   walkOutline,
   scaleOutline,
   ellipsisVerticalOutline,
-  barChartOutline,
-  homeOutline,
-  fitnessOutline,
 } from 'ionicons/icons';
+
 import './Progress.css';
 import AppTabBar from '../components/AppTabBar';
 
+type RangeView = 'weekly' | 'monthly';
+
+type Activity = {
+  id: number;
+  title: string;
+  subtitle: string;
+  icon: 'walk' | 'balance';
+};
+
+const initialActivities: Activity[] = [
+  {
+    id: 1,
+    title: '30 Minute Walk',
+    subtitle: 'About 20 minutes ago',
+    icon: 'walk',
+  },
+  {
+    id: 2,
+    title: 'Balance Circuit 2',
+    subtitle: 'Yesterday',
+    icon: 'balance',
+  },
+  {
+    id: 3,
+    title: 'Morning Walk',
+    subtitle: '2 days ago',
+    icon: 'walk',
+  },
+  {
+    id: 4,
+    title: 'Balance Circuit 1',
+    subtitle: 'Last week',
+    icon: 'balance',
+  },
+];
+
 const Progress: React.FC = () => {
+  // Bara visning – inga knappar för att ändra värden
+  const targetWorkouts = 1;
+  const completedWorkouts = 0;
+
+  const targetMinutes = 60;
+  const minutesWalked = 30;
+
+  // Weekly / Monthly
+  const [rangeView, setRangeView] = useState<RangeView>('weekly');
+
+  const weeklyData = [20, 40, 30, 55, 25, 15, 35]; // Sun–Sat
+  const monthlyData = [10, 25, 40, 30, 50, 35, 20];
+
+  const data = rangeView === 'weekly' ? weeklyData : monthlyData;
+  const maxValue = Math.max(...data);
+
+  const toggleRangeView = () => {
+    setRangeView(prev => (prev === 'weekly' ? 'monthly' : 'weekly'));
+  };
+
+  // Latest activities
+  const [activities, setActivities] = useState<Activity[]>(initialActivities);
+  const [showAllActivities, setShowAllActivities] = useState(false);
+  const [openActivityId, setOpenActivityId] = useState<number | null>(null);
+
+  const visibleActivities = showAllActivities ? activities : activities.slice(0, 2);
+
+  const handleToggleOptions = (activityId: number) => {
+    setOpenActivityId(prev => (prev === activityId ? null : activityId));
+  };
+
+  const handleRemoveActivity = (activityId: number) => {
+    setActivities(prev => prev.filter(a => a.id !== activityId));
+    setOpenActivityId(null);
+  };
+
+  const toggleShowMore = () => setShowAllActivities(prev => !prev);
+
   return (
-    <IonPage className='full-page'>
-      {/* Header */}
+    <IonPage className="progress-page">
+      {/* HEADER */}
       <IonHeader className="ion-no-border">
-        <IonToolbar>
-          <IonTitle>Progress Tracker</IonTitle>
+        <IonToolbar className="progress-toolbar">
+          <IonTitle className="progress-title">Progress Tracker</IonTitle>
           <IonButtons slot="end">
-            <IonButton color="dark">
-              <IonIcon icon={calendarOutline} />
+            <IonButton
+              fill="clear"
+              aria-label="Open calendar"
+              routerLink="/calendar"
+              routerDirection="forward"
+            >
+              <IonIcon icon={calendarOutline} className="calendar-icon" />
             </IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
 
-      {/* Content */}
-      <IonContent fullscreen>
-        <div className="ion-padding">
-          {/* Today's Target Progress Card */}
-          <div className="progressCard">
-            <div className="progressHeader">
-              <h2>Today's Target Progress</h2>
-              <IonIcon icon={addCircle} className="addIcon" />
+      {/* CONTENT */}
+      <IonContent fullscreen className="progress-content">
+        <div className="progress-inner">
+          {/* --- 1. Todays Target Progress (bara status) --- */}
+          <section className="card target-card">
+            <div className="target-header">
+              <span className="target-title">Todays Target Progress</span>
             </div>
-            <div className="progressDetails">
-              <div className="progressItem">
-                <p className="value">0/1</p>
-                <p className="label">Workouts completed</p>
-              </div>
-              <div className="progressItem">
-                <p className="value">30/60</p>
-                <p className="label">Minutes walked</p>
-              </div>
-            </div>
-          </div>
 
-          {/* Activity Progress Section */}
-          <div className="sectionHeader">
-            <h2>Activity Progress</h2>
-            <IonSelect
-              interface="popover"
-              value="weekly"
-              className="weeklySelect"
-            >
-              <IonSelectOption value="weekly">Weekly</IonSelectOption>
-              <IonSelectOption value="monthly">Monthly</IonSelectOption>
-            </IonSelect>
-          </div>
+            <div className="target-values-row">
+              <div className="target-column">
+                <p className="target-main-value">
+                  {completedWorkouts}/{targetWorkouts}
+                </p>
+                <p className="target-label">Workouts completed</p>
+              </div>
+              <div className="target-column">
+                <p className="target-main-value">
+                  {minutesWalked}/{targetMinutes}
+                </p>
+                <p className="target-label">Minutes walked</p>
+              </div>
+            </div>
+          </section>
 
-          {/* Weekly Bar Chart */}
-          <div className="barChartCard">
-            <div className="barChartContainer">
-              {/* Static Data represented by the inline 'style' for height */}
-              {/* Sun */}
-              <div className="barColumn">
-                <div className="bar barDark" style={{ height: '40%' }}></div>
-                <div className="dayLabel">Sun</div>
-              </div>
-              {/* Mon */}
-              <div className="barColumn">
-                <div className="bar barLight" style={{ height: '70%' }}></div>
-                <div className="dayLabel">Mon</div>
-              </div>
-              {/* Tue */}
-              <div className="barColumn">
-                <div className="bar barDark" style={{ height: '50%' }}></div>
-                <div className="dayLabel">Tue</div>
-              </div>
-              {/* Wed */}
-              <div className="barColumn">
-                <div className="bar barLight" style={{ height: '60%' }}></div>
-                <div className="dayLabel">Wed</div>
-              </div>
-              {/* Thu */}
-              <div className="barColumn">
-                <div className="bar barDark" style={{ height: '90%' }}></div>
-                <div className="dayLabel">Thu</div>
-              </div>
-              {/* Fri */}
-              <div className="barColumn">
-                <div className="bar barLight" style={{ height: '35%' }}></div>
-                <div className="dayLabel">Fri</div>
-              </div>
-              {/* Sat */}
-              <div className="barColumn">
-                <div className="bar barDark" style={{ height: '65%' }}></div>
-                <div className="dayLabel">Sat</div>
-              </div>
-            </div>
-          </div>
+          {/* --- 2. Activity Progress chart --- */}
+          <section className="section-block">
+            <div className="section-header">
+              <h2>Activity Progress</h2>
 
-          {/* Latest Activity Section */}
-          <div className="sectionHeader latestActivityHeader">
-            <h2>Latest Activity</h2>
-            <a href="#">See more</a>
-          </div>
+              <button
+                type="button"
+                className="range-toggle"
+                onClick={toggleRangeView}
+              >
+                {rangeView === 'weekly' ? 'Weekly' : 'Monthly'}
+              </button>
+            </div>
 
-          {/* Activity Item 1: Walk */}
-          <div className="activityItem">
-            <div className="activityIconBox">
-              <IonIcon icon={walkOutline} className="iconDark" />
-            </div>
-            <div className="activityDetails">
-              <h3>30 Minute Walk</h3>
-              <p>About 20 minutes ago</p>
-            </div>
-            <IonIcon icon={ellipsisVerticalOutline} className="moreIcon" />
-          </div>
+            <div className="card chart-card">
+              <div className="chart-bars">
+                {data.map((value, index) => {
+                  const heightPercent = (value / maxValue) * 100;
+                  const isBeige = index % 2 === 1; // varannan beige/blå
 
-          {/* Activity Item 2: Balance */}
-          <div className="activityItem">
-            <div className="activityIconBox balanceIconBox">
-              <IonIcon icon={scaleOutline} className="iconLight" />
+                  return (
+                    <div className="chart-column" key={index}>
+                      <div
+                        className={
+                          'chart-bar ' +
+                          (isBeige ? 'chart-bar-light' : 'chart-bar-dark')
+                        }
+                        style={{ height: `${heightPercent}%` }}
+                      />
+                      <span className="chart-day-label">
+                        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][index]}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-            <div className="activityDetails">
-              <h3>Balance Circuit 2</h3>
-              <p>Yesterday</p>
+          </section>
+
+          {/* --- 3. Latest Activity --- */}
+          <section className="section-block">
+            <div className="section-header">
+              <h2>Latest Activity</h2>
+              <button
+                className="see-more-button"
+                type="button"
+                onClick={toggleShowMore}
+              >
+                {showAllActivities ? 'See less' : 'See more'}
+              </button>
             </div>
-            <IonIcon icon={ellipsisVerticalOutline} className="moreIcon" />
-          </div>
+
+            {visibleActivities.map(activity => (
+              <div key={activity.id} className="activity-wrapper">
+                <div className="activity-card">
+                  <div
+                    className={
+                      'activity-icon-box ' +
+                      (activity.icon === 'balance' ? 'activity-icon-balance' : '')
+                    }
+                  >
+                    <IonIcon
+                      icon={activity.icon === 'walk' ? walkOutline : scaleOutline}
+                      className={
+                        activity.icon === 'balance' ? 'icon-light' : 'icon-dark'
+                      }
+                    />
+                  </div>
+
+                  <div className="activity-text">
+                    <p className="activity-title">{activity.title}</p>
+                    <p className="activity-subtitle">{activity.subtitle}</p>
+                  </div>
+
+                  <IonButton
+                    fill="clear"
+                    size="small"
+                    className="activity-more-btn"
+                    onClick={() => handleToggleOptions(activity.id)}
+                  >
+                    <IonIcon icon={ellipsisVerticalOutline} />
+                  </IonButton>
+                </div>
+
+                {openActivityId === activity.id && (
+                  <div className="activity-options">
+                    <button
+                      type="button"
+                      className="activity-option-btn destructive"
+                      onClick={() => handleRemoveActivity(activity.id)}
+                    >
+                      Remove from history
+                    </button>
+                    <button
+                      type="button"
+                      className="activity-option-btn"
+                      onClick={() => setOpenActivityId(null)}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
+          </section>
         </div>
       </IonContent>
 
+      {/* Bottennavigation */}
       <AppTabBar selectedTab="progress" />
     </IonPage>
   );
