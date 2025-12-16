@@ -1,22 +1,34 @@
+import subprocess
+import json
 import numpy as np
-from model_api import predict
 
-def main():
+def test_predict():
     # Create dummy input with correct shape and dtype
-    x = np.zeros((1, 1, 561), dtype=np.float32)
+    x = np.zeros((1, 1, 561), dtype=np.float32).tolist()  # Convert to list for JSON serialization
 
-    result = predict(x)
+    # Call the JavaScript predict function via Node.js
+    try:
+        result = subprocess.run(
+            ["node", "test_model_api.js"],  # JavaScript test script
+            input=json.dumps({"features": x}),
+            text=True,
+            capture_output=True,
+            check=True
+        )
+    except subprocess.CalledProcessError as e:
+        print("Error calling Node.js script:", e.stderr)
+        raise
 
-    print("Prediction result:")
-    print(result)
+    # Parse the JSON output from the Node.js script
+    output = json.loads(result.stdout)
 
     # Basic sanity checks
-    assert "label" in result
-    assert "confidence" in result
-    assert "probabilities" in result
-    assert len(result["probabilities"]) == 6
+    assert "label" in output, "Missing 'label' in prediction result"
+    assert "confidence" in output, "Missing 'confidence' in prediction result"
+    assert "probabilities" in output, "Missing 'probabilities' in prediction result"
+    assert len(output["probabilities"]) == 6, "Probabilities should have 6 classes"
 
-    print("\n API test passed successfully")
+    print("Test passed successfully with output:", output)
 
 if __name__ == "__main__":
-    main()
+    test_predict()
