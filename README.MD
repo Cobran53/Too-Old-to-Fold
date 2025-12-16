@@ -75,7 +75,7 @@ Notes:
    * Dashboard (100% static, 70% interactive)                            -> Nolann
    * Progress (100% static, 100% interactive)                            -> Lucas V
    * Settings (100% static, 100% interactive)                            -> Lucas V
-   * Trainings (100% static, 100% interactive)                             -> Lucas V
+   * Trainings (100% static, 100% interactive)                           -> Lucas V
    * Calendar (100% static, 10% interactive)                             -> Lucas (on hold)
 2) Make MySQL database (not done, it's empty, doesnt work on android)    -> Nolann 
 3) Make app send notifications (requires 2) (0%)                         -> Lucas
