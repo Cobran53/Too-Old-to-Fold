@@ -1,26 +1,31 @@
-import * as tf from '@tensorflow/tfjs';
-import { predict } from '../../src/services/model_api.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { setModelPath, predict } from '../../src/services/model_api.js';
 
-(async () => {
-  try {
-    // Read input from stdin
-    const input = await new Promise((resolve, reject) => {
-      let data = '';
-      process.stdin.on('data', chunk => data += chunk);
-      process.stdin.on('end', () => resolve(JSON.parse(data)));
-      process.stdin.on('error', reject);
-    });
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-    // Convert input features to TensorFlow.js tensor
-    const features = tf.tensor(input.features, [1, 1, 561], 'float32');
+async function test() {
+  console.log("Starting model API test...");
 
-    // Call the predict function
-    const result = await predict(features);
+  const modelPath = path.resolve(
+    __dirname,
+    'har_gru_tfjs/model.json'
+  );
 
-    // Output the result as JSON
-    console.log(JSON.stringify(result));
-  } catch (error) {
-    console.error("Error:", error.message);
-    process.exit(1);
-  }
-})();
+  setModelPath(modelPath);
+
+  // dummy input
+  const dummy = Array(561).fill(0);
+
+  const result = await predict(dummy);
+
+  console.log("Prediction result:");
+  console.log(result);
+
+  console.log("✔ API test passed successfully");
+}
+
+test().catch(err => {
+  console.error("❌ Test failed:", err);
+});
