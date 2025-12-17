@@ -1,71 +1,72 @@
-// Helper Node-only pour ouvrir la base SQLite (utilisé côté serveur / scripts)
 
-// Détection dynamique de la plateforme
-async function detectPlatform() {
-  if (typeof window === 'undefined') return 'node';
-  try {
-    const cap = await import('@capacitor/core');
-    if (cap.Capacitor && typeof cap.Capacitor.getPlatform === 'function') {
-      return cap.Capacitor.getPlatform();
-    }
-  } catch (e) {}
-  return 'web';
+// Minimal Android-only Capacitor SQLite connector
+// Exports three functions: open(name), run(sql, values?), close()
+// Very small: no web fallback, no JSON export, intended for frequent open/close.
+
+import { CapacitorSQLite } from '@capacitor-community/sqlite';
+
+let _openDbName: string | null = null;
+
+export async function open(name: string): Promise<void> {
+	if (_openDbName === name) return;
+	// open the native sqlite database (Android)
+	try {
+		// Ensure a native connection object exists. createConnection may
+		// return an error if the connection already exists — ignore that.
+		try {
+			await (CapacitorSQLite as any).createConnection({ database: name });
+		} catch (e: any) {
+			const msg = e && (e.message || String(e));
+			if (!msg || !String(msg).toLowerCase().includes('already exists')) {
+				throw e;
+			}
+			// otherwise continue — connection was already present
+		}
+
+		await (CapacitorSQLite as any).open({ database: name });
+		_openDbName = name;
+	} catch (err) {
+		_openDbName = null;
+		throw err;
+	}
 }
 
-// Node.js: sqlite3
-async function openDbNode() {
-  const sqlite3 = (await import('sqlite3')).default;
-  const { open } = await import('sqlite');
-  const path = await import('path');
-  const dbPath = path.resolve(__dirname, '..', '..', 'db', 'database.sqlite');
-  const db = await open({
-    filename: dbPath,
-    driver: sqlite3.Database,
-  });
-  return db;
+export async function run(sql: string, values?: any[]): Promise<any> {
+	if (!_openDbName) throw new Error('Database is not open');
+	const s = String(sql).trim();
+	try {
+		if (s.toLowerCase().startsWith('select')) {
+			// query returns rows
+			return await (CapacitorSQLite as any).query({
+				database: _openDbName,
+				statement: sql,
+				values: values || [],
+			});
+		}
+
+		// execute statements (one or many separated by `;`)
+		return await (CapacitorSQLite as any).execute({
+			database: _openDbName,
+			statements: sql,
+		});
+	} catch (err) {
+		throw err;
+	}
 }
 
-// Capacitor natif: plugin SQLite
-async function openDbCapacitor() {
-  const mod = await import('@capacitor-community/sqlite');
-  const { CapacitorSQLite, SQLiteConnection } = mod;
-  const sqliteConn = new SQLiteConnection(CapacitorSQLite);
-  const dbName = 'appdb';
-  await sqliteConn.createConnection(dbName, false, 'no-encryption', 1, false);
-    const db = await sqliteConn.retrieveConnection(dbName, false);
-    if (typeof db.open === 'function') {
-      await db.open();
-    }
-  // Log pour debug Android
-  console.log('[openDbCapacitor] db:', db);
-  console.log('[openDbCapacitor] sqliteConn:', sqliteConn);
-  // On retourne un objet qui expose une API compatible (all, run, etc.)
-  return {
-    all: async (query, params) => {
-      const res = await db.query(query, params);
-      console.log('[openDbCapacitor] all() result:', res);
-      return (res && (res.values || res.rows || res.results)) || [];
-    },
-    run: async (query, params) => db.run(query, params),
-    close: async () => sqliteConn.closeConnection(dbName, false),
-  };
+export async function close(): Promise<void> {
+	if (!_openDbName) return;
+	try {
+		// Close the DB for the current open name
+		await (CapacitorSQLite as any).close({ database: _openDbName });
+		// Also attempt to remove the native connection object if supported
+		try {
+			await (CapacitorSQLite as any).closeConnection({ database: _openDbName });
+		} catch (e) {
+			// ignore if not supported or already closed
+		}
+	} finally {
+		_openDbName = null;
+	}
 }
 
-// Web fallback: renvoie null (ou on pourrait charger un JSON statique)
-async function openDbWeb() {
-  // Ici, on pourrait charger un JSON ou retourner null
-  
-  return null;
-}
-
-/**
- * Ouvre la base de données selon la plateforme (Node, Capacitor natif, Web)
- */
-export async function openDb() {
-  const platform = await detectPlatform();
-  if (platform === 'node') return openDbNode();
-  if (platform !== 'web') return openDbCapacitor();
-  return openDbWeb();
-}
-
-export default openDb;

@@ -9,8 +9,10 @@ import TrainingListPage from './pages/TrainingListPage';
 import Progress from './pages/Progress';
 import SettingsPage from './pages/SettingsPage';
 import Calendar from './pages/Calendar';
-import { useEffect } from 'react';
+import ActivityLog from './pages/ActivityLog';
+import React, { useEffect, useState } from 'react';
 import { initDatabase } from './services/initDatabase';
+import { startActivityRecorder, stopActivityRecorder } from './services/activityRecorder';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -38,26 +40,54 @@ import './App.css';
 setupIonicReact();
 
 const App: React.FC = () => {
+  const [dbReady, setDbReady] = useState<boolean>(false);
+
   useEffect(() => {
-    initDatabase();
+    let cancelled = false;
+
+    (async () => {
+      try {
+        await initDatabase();
+        console.log('[App] initDatabase succeeded');
+      } catch (e) {
+        console.error('[App] initDatabase failed', e);
+      }
+
+      if (cancelled) return;
+
+      try {
+        await startActivityRecorder();
+        console.log('[App] startActivityRecorder succeeded');
+      } catch (e) {
+        console.error('[App] startActivityRecorder failed', e);
+      }
+
+      setDbReady(true);
+    })();
+
+    return () => {
+      cancelled = true;
+      stopActivityRecorder();
+    };
   }, []);
 
   return (
     <IonApp>
-      <IonReactRouter>
-        <IonTabs>
-          <IonRouterOutlet>
+      {dbReady ? (
+        <IonReactRouter>
+          <IonTabs>
+            <IonRouterOutlet>
             {/* Start / navigation flow */}
             <Route exact path="/navigation">
               <Navigation />
             </Route>
 
-            <Route exact path="/">
-              <Redirect to="/navigation" />
-            </Route>
-
             <Route exact path="/welcome">
               <Welcome />
+            </Route>
+
+            <Route exact path="/">
+              <Redirect to="/welcome" />
             </Route>
 
             {/* Huvudsidor */}
@@ -80,9 +110,16 @@ const App: React.FC = () => {
             <Route exact path="/calendar">
               <Calendar />
             </Route>
-          </IonRouterOutlet>
-        </IonTabs>
-      </IonReactRouter>
+
+            <Route exact path="/activity-log">
+              <ActivityLog />
+            </Route>
+              </IonRouterOutlet>
+            </IonTabs>
+        </IonReactRouter>
+      ) : (
+        <div style={{padding:20}}>Loading application...</div>
+      )}
     </IonApp>
   );
 };

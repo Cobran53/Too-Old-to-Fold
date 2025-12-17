@@ -19,7 +19,7 @@ import './Dashboard.css';
 import MiniWorkoutCard from '../components/MiniWorkoutCard';
 import GoalCard from '../components/GoalCard';
 import AppTabBar from '../components/AppTabBar';
-import useWorkouts from '../services/useWorkouts';
+import { open as dbOpen, run as dbRun, close as dbClose } from '../services/sqlite';
 
 const formatDate = (date: Date): string => {
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -56,15 +56,52 @@ const Dashboard: React.FC = () => {
     setDatesToDisplay(days);
   }, []);
 
-  const { workouts, isLoading } = useWorkouts({// No criteria for now
-  });
-  console.log('Filtered Workouts:', workouts);  
+  const [workouts, setWorkouts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  // Fetch workouts assigned to the selected day from the DB
+  useEffect(() => {
+    let cancelled = false;
+    const fetchDayWorkouts = async (dateKey: string) => {
+      setIsLoading(true);
+      try {
+        await dbOpen('appdb');
+        const sql = `SELECT w.id, w.title, w.duration, w.metadata FROM dayWorkouts dw JOIN workouts w ON dw.workout_id = w.id WHERE dw.date = '${dateKey}' LIMIT 2;`;
+        const res: any = await dbRun(sql);
+        const rows: any[] = (res && (res.values || res.results || res.rows)) ? (res.values || res.results || res.rows) : (Array.isArray(res) ? res : []);
+
+        const mapped = rows.map((r: any) => {
+          const metadata = r.metadata || r.metadata_json || r.metadataText || r.metadataString || r['metadata'] || null;
+          let metaObj: any = {};
+          try { metaObj = typeof metadata === 'string' ? JSON.parse(metadata) : (metadata || {}); } catch (e) { metaObj = {}; }
+          return {
+            id: r.id || metaObj.uid || String(Math.random()).slice(2),
+            name: r.title || metaObj.name || '',
+            duration_minutes: typeof r.duration === 'number' ? r.duration : (metaObj.duration_minutes || 0),
+            description: metaObj.description || '',
+            link_to_image: metaObj.link_to_image,
+          };
+        });
+
+        if (!cancelled) setWorkouts(mapped.slice(0, 2));
+      } catch (err) {
+        console.error('[Dashboard] Failed to load day workouts', err);
+        if (!cancelled) setWorkouts([]);
+      } finally {
+        try { await dbClose(); } catch (e) {}
+        if (!cancelled) setIsLoading(false);
+      }
+    };
+
+    fetchDayWorkouts(selectedDateKey);
+    return () => { cancelled = true; };
+  }, [selectedDateKey]);
   
 
   const handleDateClick = (date: Date) => {
     const newSelectedKey = getDateKey(date);
     setSelectedDateKey(newSelectedKey);
-    console.log(`Date selected: ${newSelectedKey}`);
+    console.log(`[Dashboard] Date selected: ${newSelectedKey}`);
   };
 
   return (
@@ -155,19 +192,16 @@ const Dashboard: React.FC = () => {
             {isLoading ? (
                 <p>Loading workouts...</p>
             ) : (
-                [...workouts]
-                  .sort(() => Math.random() - 0.5)
-                  .slice(0, 2)
-                  .map((workout) => (
-                    <MiniWorkoutCard
-                      key={workout.id}
-                      title={workout.name}
-                      time={workout.duration_minutes + " mins"}
-                      description={workout.description}
-                      imageSrc={workout.link_to_image || "https://picsum.photos/seed/workout/100/100"}
-                      imageAlt={workout.name}
-                    />
-                  ))
+                (workouts.slice(0, 2)).map((workout) => (
+                  <MiniWorkoutCard
+                    key={workout.id}
+                    title={workout.name}
+                    time={workout.duration_minutes + " mins"}
+                    description={workout.description}
+                    imageSrc={workout.link_to_image || "https://picsum.photos/seed/workout/100/100"}
+                    imageAlt={workout.name}
+                  />
+                ))
             )}
           </div>
         </section>

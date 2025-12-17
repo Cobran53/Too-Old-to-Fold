@@ -1,8 +1,8 @@
 // src/hooks/useWorkouts.ts
 
 import { useState, useEffect } from 'react';
-// Fallback for web (static JSON export)
-import workoutsJsonData from '../data/workouts.json';
+import { open as dbOpen, run as dbRun, close as dbClose } from './sqlite';
+
 
 
 // --- 1. DEFINE TYPES (Based on your YAML structure) ---
@@ -33,6 +33,8 @@ interface WorkoutCriteria {
     location?: WorkoutLocation;
     minDuration?: number;
     maxDuration?: number;
+    // Optional: number of workouts to return (random selection)
+    count?: number;
 }
 
 /**
@@ -52,23 +54,45 @@ const fetchFilteredWorkouts = async (criteria: WorkoutCriteria): Promise<Workout
         return true;
     });
 
+    const DB_NAME = 'appdb';
     try {
-        // Utilise la logique multiplateforme de openDb
-        const openDb = (await import('./sqlite')).default;
-        const db = await openDb();
-        if (db && typeof db.all === 'function') {
-            // SQLite natif ou Capacitor
-            const rows: Array<{ title: string; duration: number; metadata: string }> = await db.all(
-                'SELECT title, duration, metadata FROM workouts'
-            );
-            if (typeof db.close === 'function') await db.close();
-            const mapped = rows.map(r => mapRowToWorkout(r.title, r.duration, r.metadata));
-            return applyFilters(mapped);
+        await dbOpen(DB_NAME);
+        const res: any = await dbRun('SELECT id, title, duration, metadata FROM workouts');
+        // plugin may return different shapes; normalize to an array of rows
+        const rows: any[] = (res && (res.values || res.results || res.rows)) ? (res.values || res.results || res.rows) : (Array.isArray(res) ? res : []);
+
+        const mapped = rows.map((r: any) => {
+            const metadata = r.metadata || r.metadata_json || r.metadataText || r.metadataString || r[ 'metadata' ] || null;
+            return mapRowToWorkout(r.title || r.name || r[1] || '', r.duration ?? r.duration_minutes ?? 0, typeof metadata === 'string' ? metadata : JSON.stringify(metadata || {}));
+        });
+
+        await dbClose();
+
+        // Apply filters
+        const filtered = applyFilters(mapped);
+
+        // If a count was requested, return a random selection of the filtered results
+        if (criteria.count && Number(criteria.count) > 0) {
+            const n = Math.max(0, Math.floor(Number(criteria.count)));
+            if (n >= filtered.length) return filtered;
+
+            // Fisher-Yates shuffle copy
+            const shuffled = (() => {
+                const a = filtered.slice();
+                for (let i = a.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    const tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+                }
+                return a;
+            })();
+
+            return shuffled.slice(0, n);
         }
-        // Si pas de base, ne retourne rien
-        return [];
+
+        return filtered;
     } catch (error) {
-        console.error('Error fetching workouts:', error);
+        console.error('[useWorkouts] Error fetching workouts from DB:', error);
+        try { await dbClose(); } catch (e) {}
         return [];
     }
 };
@@ -89,6 +113,8 @@ function mapRowToWorkout(title: string, duration: number, metadata: string): Wor
         description: meta.description || ''
     };
 }
+
+
 
 // --- 4. THE REACT HOOK (Manages State and Calls Logic) ---
 
@@ -116,7 +142,7 @@ const useWorkouts = (criteria: WorkoutCriteria = {}) => {
                 setWorkouts(data);
             })
             .catch(error => {
-                console.error("Failed to fetch workouts:", error);
+                console.error("[useWorkouts] Failed to fetch workouts:", error);
                 setWorkouts([]); 
             })
             .finally(() => {
