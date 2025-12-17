@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, IonTabs, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
@@ -42,37 +42,38 @@ import './App.css';
 setupIonicReact();
 
 const App: React.FC = () => {
+  const [dbReady, setDbReady] = useState<boolean>(false);
+
   useEffect(() => {
     let cancelled = false;
 
     (async () => {
-      // ✅ 1) Be om notis-permission vid appstart (web: oftast no-op, mobil: prompt)
+      // 1) Be om notis-permission vid appstart
       try {
         await ensureNotificationPermission();
       } catch (e) {
         console.error('ensureNotificationPermission failed', e);
       }
 
-      // ✅ 2) Init DB
+      // 2) Init DB
       try {
         await initDatabase();
+        console.log('[App] initDatabase succeeded');
       } catch (e) {
-        console.error('initDatabase failed', e);
+        console.error('[App] initDatabase failed', e);
       }
-      try {
-  await ensureNotificationPermission();
-} catch (e) {
-  console.warn('ensureNotificationPermission failed', e);
-}
 
       if (cancelled) return;
 
-      // ✅ 3) Start recorder
+      // 3) Start recorder
       try {
         await startActivityRecorder();
+        console.log('[App] startActivityRecorder succeeded');
       } catch (e) {
-        console.error('startActivityRecorder failed', e);
+        console.error('[App] startActivityRecorder failed', e);
       }
+
+      setDbReady(true);
     })();
 
     return () => {
@@ -87,52 +88,56 @@ const App: React.FC = () => {
 
   return (
     <IonApp>
-      <IonReactRouter>
-        <IonTabs>
-          <IonRouterOutlet>
-            {/* Start / navigation flow */}
-            <Route exact path="/navigation">
-              <Navigation />
-            </Route>
+      {dbReady ? (
+        <IonReactRouter>
+          <IonTabs>
+            <IonRouterOutlet>
+              {/* Start / navigation flow */}
+              <Route exact path="/navigation">
+                <Navigation />
+              </Route>
 
-            <Route exact path="/welcome">
-              <Welcome />
-            </Route>
+              <Route exact path="/welcome">
+                <Welcome />
+              </Route>
 
-            <Route exact path="/">
-              <Redirect to="/welcome" />
-            </Route>
+              <Route exact path="/">
+                <Redirect to="/welcome" />
+              </Route>
 
-            {/* Huvudsidor */}
-            <Route exact path="/dashboard">
-              <Dashboard />
-            </Route>
+              {/* Huvudsidor */}
+              <Route exact path="/dashboard">
+                <Dashboard />
+              </Route>
 
-            <Route exact path="/training-list">
-              <TrainingListPage />
-            </Route>
+              <Route exact path="/training-list">
+                <TrainingListPage />
+              </Route>
 
-            <Route exact path="/progress">
-              <Progress />
-            </Route>
+              <Route exact path="/progress">
+                <Progress />
+              </Route>
 
-            {/* Settings & Calendar */}
-            <Route exact path="/settings">
-              <SettingsPage />
-            </Route>
+              {/* Settings & Calendar */}
+              <Route exact path="/settings">
+                <SettingsPage />
+              </Route>
 
-            <Route exact path="/calendar">
-              <Calendar />
-            </Route>
+              <Route exact path="/calendar">
+                <Calendar />
+              </Route>
 
-            <Route exact path="/activity-log">
-              <ActivityLog />
-            </Route>
-          </IonRouterOutlet>
-        </IonTabs>
-      </IonReactRouter>
+              <Route exact path="/activity-log">
+                <ActivityLog />
+              </Route>
+            </IonRouterOutlet>
+          </IonTabs>
+        </IonReactRouter>
+      ) : (
+        <div style={{ padding: 20 }}>Loading application...</div>
+      )} 
     </IonApp>
   );
 };
 
-export default App;
+export default App; 
