@@ -302,6 +302,14 @@ const SettingsPage: React.FC = () => {
           <button className="settings-row-link settings-row-link-danger">
             Delete account
           </button>
+
+          <button className="settings-row-link settings-row-link-danger" onClick={() => {
+            // DEBUG: navigate to navigation page
+            window.location.href = '/navigation';
+          }}>
+            DEBUG: see navigation page
+          </button>
+
         </section>
       </IonContent>
     </IonPage>

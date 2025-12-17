@@ -34,12 +34,7 @@
      ionic capacitor add ios
      ```
 
-5. **Generate Icons and Splash Screens (Optional)**:
-   ```powershell
-   cordova-res --skip-config --copy
-   ```
-
-6. **Explore the Application**:
+5. **Explore the Application**:
    - Once the server is running, open your browser and go to the displayed URL (default: `http://localhost:8100`).
 
 ## Additional Notes
@@ -72,14 +67,30 @@ Notes:
 ## TODO
 1) Finish all web pages (static -> interactive -> dynamic)
    * Welcome (100% done)                                                 -> Nolann V
-   * Dashboard (100% static, 70% interactive)                            -> Nolann
+   * Dashboard (100% static, 100% interactive)                           -> Nolann
    * Progress (100% static, 100% interactive)                            -> Lucas V
    * Settings (100% static, 100% interactive)                            -> Lucas V
    * Trainings (100% static, 100% interactive)                           -> Lucas V
-   * Calendar (100% static, 100% interactive)                            -> Lucas V
-2) Make MySQL database (not done, it's empty, doesnt work on android)    -> Nolann 
-3) Make app send notifications (requires 2) (0%)                         -> Lucas
-4) Read sensors&weather api and write in DB (requires 2) (0%)            -> Nolann (ignore weather)
+   * Calendar (100% static, 10% interactive)                             -> Lucas (on hold)
+2) Make MySQL database (works now)                                       -> Nolann V
+3) Make app send notifications (by calling API) (0%)                     -> Lucas
+4) Read sensors&weather api and write in DB (no weather) (0%)            -> Nolann V
 5) Make .tsfile export (0%)                                              -> Ludvig V
-6) Make .tsfile reader (0%) (requires 2 and 5)                           -> Nolann
-7) Slides for the presentation                                           -> AAAAAAAAAAAAAAAAAAAAAAAA
+7) Slides for the presentation                                           -> AAAAAAA
+
+## Activity recorder (15-minute periodic sensor logging)
+
+This project now includes a simple activity recorder that samples speed, device motion (gyro/acceleration), step counts (when a native pedometer plugin is available), GPS coordinates and timestamp, and writes an `activity_log` row every 15 minutes into the local SQLite DB.
+
+- Code: [src/services/activityRecorder.ts](src/services/activityRecorder.ts#L1)
+- DB table: [db/schema.sql](db/schema.sql#L1) (table `activity_log`)
+- The recorder is started automatically on app init in [src/App.tsx](src/App.tsx#L1).
+
+Notes and next steps:
+- On native (Android/iOS) you should install and configure a pedometer plugin for accurate step counts, for example `@capacitor-community/pedometer` or a Cordova plugin. The service will try to use such a plugin if present but falls back gracefully.
+- Background execution is platform-specific. The current implementation uses foreground timers and browser/native sensor events. To keep logging while the app is suspended, add a background task plugin (Android foreground service or iOS background modes) and move the recorder into that task.
+- To change the sampling or record interval, edit `startActivityRecorder()` options in `src/services/activityRecorder.ts`.
+
+If you want, I can:
+- Add a small UI page to view the `activity_log` entries.
+- Add platform-specific background service setup for Android (foreground service) and iOS (background fetch).

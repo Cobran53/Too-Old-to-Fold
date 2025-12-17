@@ -31,22 +31,54 @@ async function openDbCapacitor() {
   const { CapacitorSQLite, SQLiteConnection } = mod;
   const sqliteConn = new SQLiteConnection(CapacitorSQLite);
   const dbName = 'appdb';
-  await sqliteConn.createConnection(dbName, false, 'no-encryption', 1);
-  const db = await sqliteConn.open(dbName);
+  let db: any;
+  // Try to create the connection only when it does not already exist.
+  try {
+    // Newer plugin versions provide isConnection — use it when available.
+    if (typeof sqliteConn.isConnection === 'function') {
+      const exists = await sqliteConn.isConnection(dbName, false);
+      if (!exists) {
+        await sqliteConn.createConnection(dbName, false, 'no-encryption', 1, false);
+      }
+    } else {
+      // Fallback: attempt to create and ignore "already exists" error.
+      try {
+        await sqliteConn.createConnection(dbName, false, 'no-encryption', 1, false);
+      } catch (e: any) {
+        if (!e || !String(e).includes('already exists')) {
+          throw e;
+        }
+      }
+    }
+
+    db = await sqliteConn.retrieveConnection(dbName, false);
+    if (typeof db.open === 'function') {
+      await db.open();
+    }
+  } catch (e) {
+    console.warn('[openDbCapacitor] connection error:', e);
+    throw e;
+  }
+  // Log pour debug Android
+  console.log('[openDbCapacitor] db:', db);
+  console.log('[openDbCapacitor] sqliteConn:', sqliteConn);
   // On retourne un objet qui expose une API compatible (all, run, etc.)
   return {
-    all: async (query, params) => {
-      const res = await db.query(query, params);
-      return (res && (res.values || res.rows || res.results)) || [];
+    all: async (query: string, params: any[] = []) => {
+      const resAny: any = await db.query(query, params);
+      console.log('[openDbCapacitor] all() result:', resAny);
+      return resAny && (resAny.values || resAny.rows || resAny.results) || [];
     },
-    run: async (query, params) => db.run(query, params),
-    close: async () => sqliteConn.closeConnection(dbName),
+    run: async (query: string, params: any[] = []) => db.run(query, params),
+    close: async () => sqliteConn.closeConnection(dbName, false),
   };
 }
 
-// Web fallback: lève une erreur explicite (ce cas ne doit pas arriver)
+// Web fallback: renvoie null (ou on pourrait charger un JSON statique)
 async function openDbWeb() {
-  throw new Error('openDb: Should not be called on web platform.');
+  // Ici, on pourrait charger un JSON ou retourner null
+  
+  return null;
 }
 
 /**

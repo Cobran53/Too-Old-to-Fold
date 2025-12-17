@@ -7,11 +7,11 @@
 }
 
 .statsPage {
-  width: 375px; /* Typical mobile width for demonstration */
-  height: 812px; /* Typical mobile height for demonstration */
+  /*width: 375px;
+  height: 812px; 
   max-width: 100vw;
   max-height: 100vh;
-  overflow: hidden;
+  overflow: hidden;*/
   font-family: 'Sanchez', Arial, sans-serif !important;
 }
 

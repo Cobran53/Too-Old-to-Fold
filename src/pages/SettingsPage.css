@@ -1,11 +1,11 @@
 /* Telefonram / layout */
 .settings-page {
   --ion-background-color: #e8e8e8;
-  width: 375px;
-  height: 812px;
+  /*width: 375px;
+  height: 812px; 
   max-width: 100vw;
   max-height: 100vh;
-  overflow: hidden;
+  overflow: hidden;*/
   font-family: 'Sanchez', Arial, sans-serif !important;
 }
 

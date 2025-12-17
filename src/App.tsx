@@ -9,6 +9,10 @@ import TrainingListPage from './pages/TrainingListPage';
 import Progress from './pages/Progress';
 import SettingsPage from './pages/SettingsPage';
 import Calendar from './pages/Calendar';
+import ActivityLog from './pages/ActivityLog';
+import { useEffect } from 'react';
+import { initDatabase } from './services/initDatabase';
+import { startActivityRecorder, stopActivityRecorder } from './services/activityRecorder';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -35,49 +39,79 @@ import './App.css';
 
 setupIonicReact();
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonTabs>
-        <IonRouterOutlet>
-          {/* Start / navigation flow */}
-          <Route exact path="/navigation">
-            <Navigation />
-          </Route>
+const App: React.FC = () => {
+  useEffect(() => {
+    let cancelled = false;
 
-          <Route exact path="/">
-            <Redirect to="/navigation" />
-          </Route>
+    (async () => {
+      try {
+        await initDatabase();
+      } catch (e) {
+        console.error('initDatabase failed', e);
+      }
 
-          <Route exact path="/welcome">
-            <Welcome />
-          </Route>
+      if (cancelled) return;
 
-          {/* Huvudsidor */}
-          <Route exact path="/dashboard">
-            <Dashboard />
-          </Route>
+      try {
+        await startActivityRecorder();
+      } catch (e) {
+        console.error('startActivityRecorder failed', e);
+      }
+    })();
 
-          <Route exact path="/training-list">
-            <TrainingListPage />
-          </Route>
+    return () => {
+      cancelled = true;
+      stopActivityRecorder();
+    };
+  }, []);
 
-          <Route exact path="/progress">
-            <Progress />
-          </Route>
+  return (
+    <IonApp>
+      <IonReactRouter>
+        <IonTabs>
+          <IonRouterOutlet>
+            {/* Start / navigation flow */}
+            <Route exact path="/navigation">
+              <Navigation />
+            </Route>
 
-          {/* Settings & Calendar */}
-          <Route exact path="/settings">
-            <SettingsPage />
-          </Route>
+            <Route exact path="/welcome">
+              <Welcome />
+            </Route>
 
-          <Route exact path="/calendar">
-            <Calendar />
-          </Route>
-        </IonRouterOutlet>
-      </IonTabs>
-    </IonReactRouter>
-  </IonApp>
-);
+            <Route exact path="/">
+              <Redirect to="/welcome" />
+            </Route>
+
+            {/* Huvudsidor */}
+            <Route exact path="/dashboard">
+              <Dashboard />
+            </Route>
+            <Route exact path="/training-list">
+              <TrainingListPage />
+            </Route>
+
+            <Route exact path="/progress">
+              <Progress />
+            </Route>
+
+            {/* Settings & Calendar */}
+            <Route exact path="/settings">
+              <SettingsPage />
+            </Route>
+
+            <Route exact path="/calendar">
+              <Calendar />
+            </Route>
+
+            <Route exact path="/activity-log">
+              <ActivityLog />
+            </Route>
+          </IonRouterOutlet>
+        </IonTabs>
+      </IonReactRouter>
+    </IonApp>
+  );
+};
 
 export default App;
