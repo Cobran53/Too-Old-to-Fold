@@ -72,7 +72,7 @@ Notes:
    * Settings (100% static, 100% interactive)                            -> Lucas V
    * Trainings (100% static, 100% interactive)                           -> Lucas V
    * Calendar (100% static, 10% interactive)                             -> Lucas (on hold)
-2) Make MySQL database (not done, it's empty, doesnt work on android)    -> Nolann 
+2) Make MySQL database (works now)                                       -> Nolann  V
 3) Make app send notifications (requires 2) (0%)                         -> Lucas
 4) Read sensors&weather api and write in DB (requires 2) (0%)            -> Nolann (ignore weather)
 5) Make .tsfile export (0%)                                              -> Ludvig V
