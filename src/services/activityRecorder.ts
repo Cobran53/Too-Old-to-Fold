@@ -13,6 +13,7 @@ let gyroSamples: number[] = [];
 let stepsCounter = 0;
 let lastRecordedSteps = 0;
 let lastCoords: Coord = { latitude: null, longitude: null };
+let motionLastSampleTs = 0;
 
 async function getCurrentPositionAndroid(): Promise<Coord> {
   try {
@@ -23,7 +24,7 @@ async function getCurrentPositionAndroid(): Promise<Coord> {
   } catch (e) {
     console.error('[activityRecorder] Geolocation.getCurrentPosition failed', e);
     return { latitude: null, longitude: null };
-    }
+  }
 }
 
 async function initPedometerAndroid() {
@@ -47,8 +48,8 @@ async function initPedometerAndroid() {
 }
 
 async function initMotionAndroid() {
-  // Try several possible device-motion plugin names and attach a listener
-  const tryPlugins = ['@capacitor/device-motion', '@capacitor-community/device-motion', '@ionic-native/device-motion'];
+  // Try several possible motion plugin names and attach a listener
+  const tryPlugins = ['@capacitor/motion', '@capacitor/device-motion', '@capacitor-community/device-motion', '@ionic-native/device-motion'];
   for (const name of tryPlugins) {
     try {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -58,21 +59,27 @@ async function initMotionAndroid() {
 
       // Try addListener API
       if (typeof DeviceMotion.addListener === 'function') {
-        motionSubscription = await DeviceMotion.addListener('devicemotion', (ev: any) => {
-          try {
-            const r = ev.rotationRate || ev.rotation || ev;
-            const a = ev.acceleration || ev.accelerationIncludingGravity || ev;
-            if (r) {
-              const mag = Math.sqrt(Math.pow(r.alpha || 0, 2) + Math.pow(r.beta || 0, 2) + Math.pow(r.gamma || 0, 2));
+          motionSubscription = await DeviceMotion.addListener('devicemotion', (ev: any) => {
+            try {
+              const now = Date.now();
+              // throttle motion sampling to ~200ms
+              if (now - motionLastSampleTs < 200) return;
+              motionLastSampleTs = now;
+              const r = ev.rotationRate || ev.rotation || ev;
+              const a = ev.acceleration || ev.accelerationIncludingGravity || ev;
+              let mag = 0;
+              if (r) {
+                mag = Math.sqrt(Math.pow(r.alpha || 0, 2) + Math.pow(r.beta || 0, 2) + Math.pow(r.gamma || 0, 2));
+              } else if (a) {
+                mag = Math.sqrt(Math.pow(a.x || 0, 2) + Math.pow(a.y || 0, 2) + Math.pow(a.z || 0, 2));
+              }
               gyroSamples.push(mag);
-            } else if (a) {
-              const mag = Math.sqrt(Math.pow(a.x || 0, 2) + Math.pow(a.y || 0, 2) + Math.pow(a.z || 0, 2));
-              gyroSamples.push(mag);
+              // cap buffer size to avoid unbounded memory/CPU
+              if (gyroSamples.length > 600) gyroSamples.splice(0, gyroSamples.length - 600);
+            } catch (err) {
+              // ignore per-sample errors
             }
-          } catch (err) {
-            // ignore per-sample errors
-          }
-        });
+          });
         return;
       }
 
@@ -80,15 +87,16 @@ async function initMotionAndroid() {
       if (typeof DeviceMotion.watch === 'function') {
         motionSubscription = DeviceMotion.watch((ev: any) => {
           try {
+            const now = Date.now();
+            if (now - motionLastSampleTs < 200) return;
+            motionLastSampleTs = now;
             const r = ev.rotationRate || ev.rotation || ev;
             const a = ev.acceleration || ev.accelerationIncludingGravity || ev;
-            if (r) {
-              const mag = Math.sqrt(Math.pow(r.alpha || 0, 2) + Math.pow(r.beta || 0, 2) + Math.pow(r.gamma || 0, 2));
-              gyroSamples.push(mag);
-            } else if (a) {
-              const mag = Math.sqrt(Math.pow(a.x || 0, 2) + Math.pow(a.y || 0, 2) + Math.pow(a.z || 0, 2));
-              gyroSamples.push(mag);
-            }
+            let mag = 0;
+            if (r) mag = Math.sqrt(Math.pow(r.alpha || 0, 2) + Math.pow(r.beta || 0, 2) + Math.pow(r.gamma || 0, 2));
+            else if (a) mag = Math.sqrt(Math.pow(a.x || 0, 2) + Math.pow(a.y || 0, 2) + Math.pow(a.z || 0, 2));
+            gyroSamples.push(mag);
+            if (gyroSamples.length > 600) gyroSamples.splice(0, gyroSamples.length - 600);
           } catch (err) {}
         });
         return;
@@ -97,7 +105,7 @@ async function initMotionAndroid() {
       // try next plugin name
     }
   }
-  console.warn('[activityRecorder] no device-motion plugin found (Android)');
+  console.warn('[activityRecorder] no motion plugin found (Android)');
 }
 
 async function persistRecord() {
@@ -188,18 +196,20 @@ export async function startActivityRecorder(opts?: { sampleIntervalMs?: number; 
       console.warn('[activityRecorder] no @capacitor/motion plugin available', e);
     }
   // start periodic sampling of position/speed
+  // reduce GPS sampling frequency to 60s by default to lower CPU/IO
   positionInterval = setInterval(async () => {
     try {
       const pos = await getCurrentPositionAndroid();
       if (pos.latitude !== null && pos.longitude !== null) lastCoords = pos;
 
-      // try to sample speed from Geolocation coords (m/s -> km/h)
+      // sample speed occasionally via Geolocation; keep it lightweight
       try {
         const mod = await import('@capacitor/geolocation');
         const { Geolocation } = mod;
         const p = await Geolocation.getCurrentPosition({ enableHighAccuracy: true, maximumAge: 0 });
         if (p && p.coords && typeof p.coords.speed === 'number' && !isNaN(p.coords.speed)) {
           speedSamples.push(p.coords.speed * 3.6);
+          if (speedSamples.length > 120) speedSamples.splice(0, speedSamples.length - 120);
         }
       } catch (err) {
         // ignore per-sample errors
@@ -210,17 +220,20 @@ export async function startActivityRecorder(opts?: { sampleIntervalMs?: number; 
   }, sampleIntervalMs);
 
   // schedule persistence every recordIntervalMs
-  recordInterval = setInterval(async () => {
+  // schedule persistence every recordIntervalMs; call without awaiting to avoid blocking
+  recordInterval = setInterval(() => {
     try {
-      await persistRecord();
+      persistRecord().catch(err => console.error('[activityRecorder] persistRecord failed', err));
     } catch (err) {
-      console.error('[activityRecorder] persistRecord failed', err);
+      console.error('[activityRecorder] persistRecord schedule failed', err);
     }
   }, recordIntervalMs);
 
-  // initial quick persist after a short delay to create a first row
+  // initial quick persist after a short delay to create a first row (non-blocking)
   setTimeout(() => {
-    persistRecord().catch(() => {});
+    try {
+      persistRecord().catch(() => {});
+    } catch (e) {}
   }, Math.min(5000, recordIntervalMs));
 }
 
@@ -257,4 +270,8 @@ export function stopActivityRecorder() {
       pedometerSubscription.stop();
     }
   } catch (e) {}
+}
+
+export function isActivityRecorderRunning() {
+  return isRunning;
 }

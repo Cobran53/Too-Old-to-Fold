@@ -12,7 +12,7 @@ const Welcome: React.FC = () => {
                     <IonIcon icon={walkOutline} />
                 </div>
                 <div className="welcome-title">Welcome to Too Old to Fold</div>
-                <IonRouterLink className="btn-get-started" routerLink="/dashboard"> 
+                <IonRouterLink className="btn-get-started" href="/dashboard"> 
                     Get Started <IonIcon icon={arrowForwardOutline} />
                 </IonRouterLink>
             </div>

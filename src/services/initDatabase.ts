@@ -6,11 +6,15 @@ export async function initDatabase() {
   const db = await openDb();
   if (!db) return;
 
-  // Cut the schema into individual statements (ignore empty lines and comments)
-  const statements = schemaSql
+  // Nettoie les commentaires (/* ... */ et -- ...) puis découpe en statements SQL
+  const cleaned = schemaSql
+    .replace(/\/\*[\s\S]*?\*\//g, '') // supprime les block comments
+    .replace(/--.*$/gm, ''); // supprime les commentaires ligne
+
+  const statements = cleaned
     .split(';')
     .map(s => s.trim())
-    .filter(s => s && !s.startsWith('/*') && !s.startsWith('--'));
+    .filter(s => s);
 
   for (const stmt of statements) {
     try {
@@ -39,7 +43,8 @@ export async function initDatabase() {
 
   // Insère les données de seed
   if (seedData && Array.isArray(seedData.workouts)) {
-    for (const w of seedData.workouts) {
+    for (const wRaw of seedData.workouts) {
+      const w: any = wRaw;
       const title = w.name || w.title || 'Untitled';
       const duration = typeof w.duration_minutes === 'number' ? w.duration_minutes : (w.duration || 0);
       const metadata = {

@@ -41,10 +41,26 @@ setupIonicReact();
 
 const App: React.FC = () => {
   useEffect(() => {
-    initDatabase();
-    // Démarre l'enregistrement d'activité périodique (échantillonnage et insertion toutes les 15 minutes)
-    startActivityRecorder().catch(e => console.error('startActivityRecorder failed', e));
+    let cancelled = false;
+
+    (async () => {
+      try {
+        await initDatabase();
+      } catch (e) {
+        console.error('initDatabase failed', e);
+      }
+
+      if (cancelled) return;
+
+      try {
+        await startActivityRecorder();
+      } catch (e) {
+        console.error('startActivityRecorder failed', e);
+      }
+    })();
+
     return () => {
+      cancelled = true;
       stopActivityRecorder();
     };
   }, []);
@@ -59,12 +75,12 @@ const App: React.FC = () => {
               <Navigation />
             </Route>
 
-            <Route exact path="/">
-              <Redirect to="/navigation" />
-            </Route>
-
             <Route exact path="/welcome">
               <Welcome />
+            </Route>
+
+            <Route exact path="/">
+              <Redirect to="/welcome" />
             </Route>
 
             {/* Huvudsidor */}
