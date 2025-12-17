@@ -1,66 +1,105 @@
-import { openDb } from './sqlite';
-import schemaSql from '../../db/schema.sql?raw';
-import seedData from '../data/workouts.json';
+import workoutsJson from '../data/workouts.json';
+import { open as dbOpen, run as dbRun, close as dbClose } from './sqlite';
 
-export async function initDatabase() {
-  const db = await openDb();
-  if (!db) return;
-
-  // Nettoie les commentaires (/* ... */ et -- ...) puis découpe en statements SQL
-  const cleaned = schemaSql
-    .replace(/\/\*[\s\S]*?\*\//g, '') // supprime les block comments
-    .replace(/--.*$/gm, ''); // supprime les commentaires ligne
-
-  const statements = cleaned
-    .split(';')
-    .map(s => s.trim())
-    .filter(s => s);
-
-  for (const stmt of statements) {
-    try {
-      await db.run(stmt);
-    } catch (e) {
-      // Ignore "table already exists" et continue
-      if (!String(e).includes('already exists')) {
-        console.error('Erreur SQL:', stmt, e);
-      }
-    }
-  }
-
-  // Vérifie s'il y a déjà des données
-  let workouts = [];
-  try {
-    workouts = await db.all('SELECT COUNT(*) as count FROM workouts', []);
-  } catch (e) {
-    console.error('Error while doing SELECT COUNT on workouts:', e);
-    await db.close();
-    return;
-  }
-  if (workouts[0]?.count > 0) {
-    await db.close();
-    return;
-  }
-
-  // Insère les données de seed
-  if (seedData && Array.isArray(seedData.workouts)) {
-    for (const wRaw of seedData.workouts) {
-      const w: any = wRaw;
-      const title = w.name || w.title || 'Untitled';
-      const duration = typeof w.duration_minutes === 'number' ? w.duration_minutes : (w.duration || 0);
-      const metadata = {
-        uid: w.id,
-        length: w.length,
-        link_to_page: w.link_to_page,
-        link_to_image: w.link_to_image,
-        location: w.location,
-        category: w.category,
-        description: w.description
-      };
-      await db.run(
-        'INSERT INTO workouts (title, duration, metadata) VALUES (?, ?, ?)',
-        [title, duration, JSON.stringify(metadata)]
-      );
-    }
-  }
-  await db.close();
+function escapeSqlString(s: string): string {
+	return s.replace(/'/g, "''");
 }
+
+// Insert seed workouts into the currently-open database.
+// Assumes the caller has already opened the DB.
+export async function seedWorkouts(items: any[]): Promise<void> {
+	if (!items || items.length === 0) return;
+
+	const stmts = items.map((w: any) => {
+		const title = escapeSqlString(w.name || w.title || 'Untitled');
+		const duration = typeof w.duration_minutes === 'number' ? w.duration_minutes : (w.duration || 0);
+		const metadataObj = {
+			uid: w.id,
+			length: w.length,
+			link_to_page: w.link_to_page,
+			link_to_image: w.link_to_image,
+			location: w.location,
+			category: w.category,
+			description: w.description,
+			duration_minutes: w.duration_minutes
+		};
+		const metadata = escapeSqlString(JSON.stringify(metadataObj));
+		return `INSERT INTO workouts (title, duration, metadata) VALUES ('${title}', ${Number(duration)}, '${metadata}');`;
+	}).join('\n');
+
+	await dbRun(stmts);
+}
+
+export async function initDatabase(): Promise<void> {
+	const DB = 'appdb';
+	try {
+		await dbOpen(DB);
+
+		// Ensure table exists (minimal schema matching scripts/init_db.js)
+		const createSql = `CREATE TABLE IF NOT EXISTS workouts (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			title TEXT NOT NULL,
+			duration INTEGER DEFAULT 0,
+			metadata TEXT,
+			created_at DATETIME DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
+		);`;
+		await dbRun(createSql);
+
+
+		const createDayWorkoutsSql = `CREATE TABLE IF NOT EXISTS dayWorkouts (
+			date DATE NOT NULL,
+			workout_id INTEGER NOT NULL,
+			PRIMARY KEY (date, workout_id),
+			FOREIGN KEY (workout_id) REFERENCES workouts(id) ON DELETE CASCADE
+		);`;
+		await dbRun(createDayWorkoutsSql);
+
+		// Insert rows from JSON seed (if any)
+		const items = (workoutsJson && (workoutsJson as any).workouts) ? (workoutsJson as any).workouts : [];
+		
+		var noWorkouts = false;
+		if (items.length === 0) {
+			noWorkouts = true;
+		}
+		
+    	// Check if the database already contains workouts
+		const existingWorkouts = await dbRun('SELECT COUNT(*) as count FROM workouts;');
+		if (existingWorkouts[0]?.count > 0) {
+			noWorkouts = true;
+		}
+		if (!noWorkouts) {
+			// Build a single statement with escaped literals
+			await seedWorkouts(items).catch(async (err) => {
+				console.error('Error seeding workouts:', err);
+			});
+		}
+
+		// For each day in the previous 7 and next 30 days, assign 2 random workouts
+		var noDayWorkouts = false;
+		const existingDayWorkouts = await dbRun('SELECT COUNT(*) as count FROM dayWorkouts;');
+		if (existingDayWorkouts[0]?.count > 0) {
+			noDayWorkouts = true;
+		}
+
+		if (!noDayWorkouts) {
+			const today = new Date();
+			for (let offset = -7; offset <= 30; offset++) {
+				const date = new Date(today);
+				date.setDate(today.getDate() + offset);
+				const dateStr = date.toISOString().slice(0, 10); // YYYY-MM-DD
+				const assignSql = `INSERT OR IGNORE INTO dayWorkouts (date, workout_id)
+					SELECT '${dateStr}' AS date, id FROM workouts
+					ORDER BY RANDOM() LIMIT 2;`;
+				await dbRun(assignSql);
+			}
+		}
+
+		await dbClose();
+
+	} catch (err) {
+		try { await dbClose(); } catch (e) {}
+		throw err;
+	}
+}
+
+export default initDatabase;
