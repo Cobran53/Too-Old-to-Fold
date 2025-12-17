@@ -1,4 +1,3 @@
-/*TODO PUT BACK IN .CSS DOES NOT WORK*/
 /* Define custom colors */
 :root {
   --cal-bg-color: #b19371; /* Beige/brown from image */
@@ -16,9 +15,9 @@
   font-family: 'Sanchez', Arial, sans-serif !important;
 }
 
- /* Base Page Setup */
+/* Base Page Setup */
 .statsPage ion-content {
-  --background: var(--stats-bg-color); /* Ensure the content area has the dark blue background */
+  --background: var(--stats-bg-color); /* dark blue underdelen */
 }
 
 /* --- Calendar Section --- */
@@ -27,7 +26,6 @@
   color: var(--text-light);
   padding: 0 1rem;
   padding-bottom: 2rem;
-  /* Create the bottom rounded edge */
   border-bottom-left-radius: 40px;
   border-bottom-right-radius: 40px;
   position: relative;
@@ -57,11 +55,11 @@
   justify-content: center;
   align-items: center;
   font-weight: bold;
-  position: relative; /* Needed to position the flame */
+  position: relative;
 }
 
 .flameIcon {
-  color: #ff9900; /* Orange/Yellow for flame */
+  color: #ff9900;
   font-size: 1.2rem;
   position: absolute;
   top: 5px;
@@ -70,7 +68,7 @@
 
 .streakNumber {
   font-size: 1.5rem;
-  margin-left: 10px; /* Offset for the flame icon */
+  margin-left: 10px;
   color: var(--text-light);
 }
 
@@ -176,6 +174,44 @@
   font-size: 1rem;
   font-weight: 400;
   margin: 0;
+  opacity: 0.7;
+}
+
+/* Aktiviteter för vald dag */
+.dayActivitySection {
+  margin-top: 2rem;
+}
+
+.dayActivityTitle {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0 0 0.75rem 0;
+  text-align: left;
+}
+
+.dayActivityEmpty {
+  font-size: 0.9rem;
+  opacity: 0.7;
+  margin: 0;
+}
+
+.dayActivityCard {
+  background: #ffffff;
+  color: var(--text-dark);
+  border-radius: 15px;
+  padding: 0.9rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.dayActivityCardTitle {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.dayActivityCardSubtitle {
+  margin: 3px 0 0 0;
+  font-size: 0.8rem;
   opacity: 0.7;
 }
 

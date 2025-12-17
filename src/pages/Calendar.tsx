@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   IonPage,
   IonContent,
@@ -12,7 +12,103 @@ import { arrowBackOutline, flameOutline } from 'ionicons/icons';
 
 import './Calendar.css';
 
+// -------- Hjälpfunktioner för streaks --------
+
+const calculateLongestStreak = (days: number[]): number => {
+  if (days.length === 0) return 0;
+  const sorted = [...new Set(days)].sort((a, b) => a - b);
+
+  let longest = 1;
+  let current = 1;
+
+  for (let i = 1; i < sorted.length; i++) {
+    if (sorted[i] === sorted[i - 1] + 1) {
+      current++;
+      longest = Math.max(longest, current);
+    } else {
+      current = 1;
+    }
+  }
+  return longest;
+};
+
+const getCurrentStreakDays = (days: number[]): number[] => {
+  if (days.length === 0) return [];
+  const sorted = [...new Set(days)].sort((a, b) => a - b);
+  const set = new Set(sorted);
+  const lastDay = sorted[sorted.length - 1];
+
+  const streak: number[] = [];
+  let d = lastDay;
+  while (set.has(d)) {
+    streak.unshift(d);
+    d--;
+  }
+  return streak;
+};
+
+// -------- Data: färdiga completed-days + aktiviteter --------
+
+// Samma “fyllda” dagar som i din design: 6, 8–11
+const COMPLETED_DAYS: number[] = [6, 8, 9, 10, 11];
+
+type DayActivity = {
+  title: string;
+  subtitle: string;
+};
+
+const activitiesByDay: Record<number, DayActivity[]> = {
+  6: [
+    { title: 'Evening Walk', subtitle: '6 km · 55 min' },
+  ],
+  8: [
+    { title: 'Balance Circuit 1', subtitle: '20 min · Balance' },
+  ],
+  9: [
+    { title: 'Brisk Morning Walk', subtitle: '7 km · 60 min' },
+  ],
+  10: [
+    { title: 'Safe Steps', subtitle: '20 min · At home' },
+  ],
+  11: [
+    { title: 'Beginner Yoga', subtitle: '25 min · Strength' },
+  ],
+  // andra dagar: inga aktiviteter → tom lista
+};
+
 const Calendar: React.FC = () => {
+  const [selectedDay, setSelectedDay] = useState<number>(12); // understruken dag
+
+  const daysInMonth = 31;
+  const allDays = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+
+  const currentStreakDays = useMemo(
+    () => getCurrentStreakDays(COMPLETED_DAYS),
+    []
+  );
+
+  const longestStreak = useMemo(
+    () => calculateLongestStreak(COMPLETED_DAYS),
+    []
+  );
+
+  const completedCount = COMPLETED_DAYS.length;
+  const currentStreakLength = currentStreakDays.length;
+
+  // Datum-text för vald dag
+  const { weekdayName, dayLabel } = useMemo(() => {
+    const date = new Date(2025, 11, selectedDay); // 11 = December
+    const weekdayName = date.toLocaleDateString('en-US', { weekday: 'long' });
+    const dayLabel = `${selectedDay} December`;
+    return { weekdayName, dayLabel };
+  }, [selectedDay]);
+
+  const todaysActivities: DayActivity[] = activitiesByDay[selectedDay] ?? [];
+
+  const handleDayClick = (day: number) => {
+    setSelectedDay(day); // bara välja – inte ändra streak/completion
+  };
+
   return (
     <IonPage className="statsPage">
       <IonContent fullscreen>
@@ -21,7 +117,6 @@ const Calendar: React.FC = () => {
           <IonHeader className="ion-no-border headerTransparent">
             <IonToolbar>
               <IonButtons slot="start">
-                {/* Tillbaka till dashboard/home */}
                 <IonButton
                   fill="clear"
                   color="light"
@@ -35,55 +130,40 @@ const Calendar: React.FC = () => {
               <IonButtons slot="end">
                 <div className="streakBadge">
                   <IonIcon icon={flameOutline} className="flameIcon" />
-                  <span className="streakNumber">3</span>
+                  <span className="streakNumber">{currentStreakLength}</span>
                 </div>
               </IonButtons>
             </IonToolbar>
           </IonHeader>
 
-          {/* Datumtext */}
+          {/* Datumtext – uppdateras när man klickar en dag */}
           <div className="dateInfo">
-            <p>Wednesday</p>
-            <h1>12 December</h1>
+            <p>{weekdayName}</p>
+            <h1>{dayLabel}</h1>
           </div>
 
           {/* Kalendern (datumrutorna) */}
           <div className="calendarGrid">
-            <div className="day">1</div>
-            <div className="day">2</div>
-            <div className="day">3</div>
-            <div className="day">4</div>
-            <div className="day">5</div>
-            <div className="day completedDay">6</div>
-            <div className="day">7</div>
+            {allDays.map((day) => {
+              const isCompleted = COMPLETED_DAYS.includes(day);
+              const isInCurrentStreak = currentStreakDays.includes(day);
+              const isCurrentDay = day === selectedDay;
 
-            <div className="day completedDay">8</div>
-            <div className="day completedDay currentStreak">9</div>
-            <div className="day completedDay currentStreak">10</div>
-            <div className="day completedDay currentStreak">11</div>
-            <div className="day currentDay">12</div>
-            <div className="day">13</div>
-            <div className="day">14</div>
+              const classes = ['day'];
+              if (isCompleted) classes.push('completedDay');
+              if (isInCurrentStreak) classes.push('currentStreak');
+              if (isCurrentDay) classes.push('currentDay');
 
-            <div className="day">15</div>
-            <div className="day">16</div>
-            <div className="day">17</div>
-            <div className="day">18</div>
-            <div className="day">19</div>
-            <div className="day">20</div>
-            <div className="day">21</div>
-
-            <div className="day">22</div>
-            <div className="day">23</div>
-            <div className="day">24</div>
-            <div className="day">25</div>
-            <div className="day">26</div>
-            <div className="day">27</div>
-            <div className="day">28</div>
-
-            <div className="day">29</div>
-            <div className="day">30</div>
-            <div className="day">31</div>
+              return (
+                <div
+                  key={day}
+                  className={classes.join(' ')}
+                  onClick={() => handleDayClick(day)}
+                >
+                  {day}
+                </div>
+              );
+            })}
           </div>
 
           {/* Veckodagar längst ned, enligt Figma (Sat → Fri) */}
@@ -103,7 +183,7 @@ const Calendar: React.FC = () => {
           <h2 className="statsTitle">My Stats</h2>
           <div className="statsGrid">
             <div className="statItem">
-              <p className="statValue">32-days</p>
+              <p className="statValue">{longestStreak}-days</p>
               <p className="statLabel">Longest Streak</p>
             </div>
             <div className="statItem">
@@ -111,13 +191,28 @@ const Calendar: React.FC = () => {
               <p className="statLabel">Longest Walk</p>
             </div>
             <div className="statItem">
-              <p className="statValue">3-days</p>
+              <p className="statValue">{currentStreakLength}-days</p>
               <p className="statLabel">Current Streak</p>
             </div>
             <div className="statItem">
-              <p className="statValue">53</p>
+              <p className="statValue">{completedCount}</p>
               <p className="statLabel">Completed Days</p>
             </div>
+          </div>
+
+          {/* Aktiviteter för vald dag */}
+          <div className="dayActivitySection">
+            <h3 className="dayActivityTitle">Activity on this day</h3>
+            {todaysActivities.length === 0 ? (
+              <p className="dayActivityEmpty">No logged workouts</p>
+            ) : (
+              todaysActivities.map((act, idx) => (
+                <div key={idx} className="dayActivityCard">
+                  <p className="dayActivityCardTitle">{act.title}</p>
+                  <p className="dayActivityCardSubtitle">{act.subtitle}</p>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </IonContent>

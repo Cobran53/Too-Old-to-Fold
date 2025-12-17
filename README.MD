@@ -76,7 +76,7 @@ Notes:
    * Progress (100% static, 100% interactive)                            -> Lucas V
    * Settings (100% static, 100% interactive)                            -> Lucas V
    * Trainings (100% static, 100% interactive)                           -> Lucas V
-   * Calendar (100% static, 10% interactive)                             -> Lucas (on hold)
+   * Calendar (100% static, 100% interactive)                            -> Lucas V
 2) Make MySQL database (not done, it's empty, doesnt work on android)    -> Nolann 
 3) Make app send notifications (requires 2) (0%)                         -> Lucas
 4) Read sensors&weather api and write in DB (requires 2) (0%)            -> Nolann (ignore weather)
