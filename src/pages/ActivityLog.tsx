@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonList, IonItem, IonLabel, IonSpinner } from '@ionic/react';
-// SQLite disabled — ActivityLog will show no records until DB is restored
+import { open as dbOpen, run as dbRun, close as dbClose } from '../services/sqlite';
 
 type ActivityRow = {
   id: number;
@@ -19,12 +19,40 @@ const ActivityLog: React.FC = () => {
   async function load() {
     setLoading(true);
     try {
-      console.log('[ActivityLog] load skipped: sqlite disabled');
-      setRows([]);
+      await dbOpen('appdb');
+      const res: any = await dbRun(
+        `SELECT id, avg_speed, gyro_movement, steps, latitude, longitude, timestamp
+         FROM activity_log
+         ORDER BY timestamp DESC
+         LIMIT 100;`
+      );
+      const raw: any[] = (res && (res.values || res.results || res.rows))
+        ? (res.values || res.results || res.rows)
+        : (Array.isArray(res) ? res : []);
+
+      const toNum = (v: any): number | null => {
+        if (v === null || v === undefined) return null;
+        if (typeof v === 'number') return v;
+        const n = Number(v);
+        return isNaN(n) ? null : n;
+      };
+
+      const mapped: ActivityRow[] = raw.map((r: any) => ({
+        id: r.id ?? (Array.isArray(r) ? r[0] : Math.random()),
+        avg_speed: toNum(r.avg_speed ?? (Array.isArray(r) ? r[1] : undefined)),
+        gyro_movement: toNum(r.gyro_movement ?? (Array.isArray(r) ? r[2] : undefined)),
+        steps: toNum(r.steps ?? (Array.isArray(r) ? r[3] : undefined)),
+        latitude: toNum(r.latitude ?? (Array.isArray(r) ? r[4] : undefined)),
+        longitude: toNum(r.longitude ?? (Array.isArray(r) ? r[5] : undefined)),
+        timestamp: (r.timestamp ?? (Array.isArray(r) ? r[6] : null)) || null,
+      }));
+
+      setRows(mapped);
     } catch (e) {
       console.error('Failed to load activity_log', e);
       setRows([]);
     } finally {
+      try { await dbClose(); } catch {}
       setLoading(false);
     }
   }

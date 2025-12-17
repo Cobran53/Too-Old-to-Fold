@@ -54,6 +54,20 @@ export async function initDatabase(): Promise<void> {
 		);`;
 		await dbRun(createDayWorkoutsSql);
 
+		// Ensure activity_log table exists for periodic activity samples
+		const createActivityLogSql = `CREATE TABLE IF NOT EXISTS activity_log (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			avg_speed REAL,
+			gyro_movement REAL,
+			steps INTEGER,
+			latitude REAL,
+			longitude REAL,
+			timestamp TEXT,
+			day_of_week TEXT,
+			created_at DATETIME DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
+		);`;
+		await dbRun(createActivityLogSql);
+
 		// Insert rows from JSON seed (if any)
 		const items = (workoutsJson && (workoutsJson as any).workouts) ? (workoutsJson as any).workouts : [];
 		
