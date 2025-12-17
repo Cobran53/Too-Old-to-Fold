@@ -1,6 +1,11 @@
+import React, { useEffect } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, IonTabs, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
+
+import { ensureNotificationPermission } from './services/notifications';
+import { initDatabase } from './services/initDatabase';
+import { startActivityRecorder, stopActivityRecorder } from './services/activityRecorder';
 
 import Navigation from './pages/Navigation';
 import Welcome from './pages/Welcome';
@@ -10,9 +15,6 @@ import Progress from './pages/Progress';
 import SettingsPage from './pages/SettingsPage';
 import Calendar from './pages/Calendar';
 import ActivityLog from './pages/ActivityLog';
-import { useEffect } from 'react';
-import { initDatabase } from './services/initDatabase';
-import { startActivityRecorder, stopActivityRecorder } from './services/activityRecorder';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -44,14 +46,28 @@ const App: React.FC = () => {
     let cancelled = false;
 
     (async () => {
+      // ✅ 1) Be om notis-permission vid appstart (web: oftast no-op, mobil: prompt)
+      try {
+        await ensureNotificationPermission();
+      } catch (e) {
+        console.error('ensureNotificationPermission failed', e);
+      }
+
+      // ✅ 2) Init DB
       try {
         await initDatabase();
       } catch (e) {
         console.error('initDatabase failed', e);
       }
+      try {
+  await ensureNotificationPermission();
+} catch (e) {
+  console.warn('ensureNotificationPermission failed', e);
+}
 
       if (cancelled) return;
 
+      // ✅ 3) Start recorder
       try {
         await startActivityRecorder();
       } catch (e) {
@@ -61,7 +77,11 @@ const App: React.FC = () => {
 
     return () => {
       cancelled = true;
-      stopActivityRecorder();
+      try {
+        stopActivityRecorder();
+      } catch (e) {
+        console.error('stopActivityRecorder failed', e);
+      }
     };
   }, []);
 
@@ -87,6 +107,7 @@ const App: React.FC = () => {
             <Route exact path="/dashboard">
               <Dashboard />
             </Route>
+
             <Route exact path="/training-list">
               <TrainingListPage />
             </Route>

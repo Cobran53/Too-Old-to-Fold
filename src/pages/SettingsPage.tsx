@@ -12,8 +12,10 @@ import {
   chevronDownOutline,
   removeOutline,
   addOutline,
+  notificationsOutline,
 } from 'ionicons/icons';
 
+import { testNotifyButton } from '../services/notificationApi';
 import './SettingsPage.css';
 
 type SettingField =
@@ -87,12 +89,11 @@ const SettingsPage: React.FC = () => {
     setActiveField(null);
   };
 
-  const decreaseTemp = () => {
-    setMinTemp((t) => Math.max(-10, t - 1));
-  };
+  const decreaseTemp = () => setMinTemp((t) => Math.max(-10, t - 1));
+  const increaseTemp = () => setMinTemp((t) => Math.min(30, t + 1));
 
-  const increaseTemp = () => {
-    setMinTemp((t) => Math.min(30, t + 1));
+  const toggleField = (field: SettingField) => {
+    setActiveField((prev) => (prev === field ? null : field));
   };
 
   const renderDropdown = (field: SettingField) => {
@@ -105,6 +106,7 @@ const SettingsPage: React.FC = () => {
             key={option}
             className="settings-inline-option-button"
             onClick={() => handleOptionSelect(field, option)}
+            type="button"
           >
             {option}
           </button>
@@ -123,6 +125,7 @@ const SettingsPage: React.FC = () => {
               className="settings-back-button"
               fill="solid"
               routerLink="/dashboard"
+              routerDirection="back"
             >
               <IonIcon icon={arrowBackOutline} />
             </IonButton>
@@ -144,13 +147,11 @@ const SettingsPage: React.FC = () => {
                 Frequency of sedentarity warnings
               </span>
             </div>
+
             <button
               className="settings-row-value"
-              onClick={() =>
-                setActiveField((prev) =>
-                  prev === 'sedentary' ? null : 'sedentary'
-                )
-              }
+              onClick={() => toggleField('sedentary')}
+              type="button"
             >
               <span>{sedentaryFreq}</span>
               <IonIcon icon={chevronDownOutline} />
@@ -163,26 +164,34 @@ const SettingsPage: React.FC = () => {
             <div className="settings-row-text">
               <span className="settings-row-label">Workout reminders</span>
             </div>
+
             <button
               className="settings-row-value"
-              onClick={() =>
-                setActiveField((prev) =>
-                  prev === 'reminders' ? null : 'reminders'
-                )
-              }
+              onClick={() => toggleField('reminders')}
+              type="button"
             >
               <span>{reminderMode}</span>
               <IonIcon icon={chevronDownOutline} />
             </button>
           </div>
           {renderDropdown('reminders')}
+
+          {/* TEST: API-notifieringar */}
+          <div style={{ marginTop: 12 }}>
+            <IonButton
+              expand="block"
+              onClick={testNotifyButton}
+              className="settings-test-notification"
+            >
+              <IonIcon icon={notificationsOutline} slot="start" />
+              Test notifications
+            </IonButton>
+          </div>
         </section>
 
         {/* --- Outside workout preferences --- */}
         <section className="settings-section">
-          <h2 className="settings-section-title">
-            Outside workout preferences
-          </h2>
+          <h2 className="settings-section-title">Outside workout preferences</h2>
 
           <div className="settings-row">
             <div className="settings-row-text">
@@ -190,9 +199,8 @@ const SettingsPage: React.FC = () => {
             </div>
             <button
               className="settings-row-value"
-              onClick={() =>
-                setActiveField((prev) => (prev === 'rain' ? null : 'rain'))
-              }
+              onClick={() => toggleField('rain')}
+              type="button"
             >
               <span>{rainPreference}</span>
               <IonIcon icon={chevronDownOutline} />
@@ -206,9 +214,8 @@ const SettingsPage: React.FC = () => {
             </div>
             <button
               className="settings-row-value"
-              onClick={() =>
-                setActiveField((prev) => (prev === 'hail' ? null : 'hail'))
-              }
+              onClick={() => toggleField('hail')}
+              type="button"
             >
               <span>{hailPreference}</span>
               <IonIcon icon={chevronDownOutline} />
@@ -222,9 +229,8 @@ const SettingsPage: React.FC = () => {
             </div>
             <button
               className="settings-row-value"
-              onClick={() =>
-                setActiveField((prev) => (prev === 'snow' ? null : 'snow'))
-              }
+              onClick={() => toggleField('snow')}
+              type="button"
             >
               <span>{snowPreference}</span>
               <IonIcon icon={chevronDownOutline} />
@@ -238,11 +244,8 @@ const SettingsPage: React.FC = () => {
             </div>
             <button
               className="settings-row-value"
-              onClick={() =>
-                setActiveField((prev) =>
-                  prev === 'belowTempPref' ? null : 'belowTempPref'
-                )
-              }
+              onClick={() => toggleField('belowTempPref')}
+              type="button"
             >
               <span>{belowTempPref}</span>
               <IonIcon icon={chevronDownOutline} />
@@ -256,16 +259,19 @@ const SettingsPage: React.FC = () => {
                 Min. temperature: {minTemp}°C
               </span>
             </div>
+
             <div className="settings-row-counter">
               <button
                 className="settings-counter-button"
                 onClick={decreaseTemp}
+                type="button"
               >
                 <IonIcon icon={removeOutline} />
               </button>
               <button
                 className="settings-counter-button"
                 onClick={increaseTemp}
+                type="button"
               >
                 <IonIcon icon={addOutline} />
               </button>
@@ -283,11 +289,8 @@ const SettingsPage: React.FC = () => {
             </div>
             <button
               className="settings-row-value"
-              onClick={() =>
-                setActiveField((prev) =>
-                  prev === 'dataPref' ? null : 'dataPref'
-                )
-              }
+              onClick={() => toggleField('dataPref')}
+              type="button"
             >
               <span>{dataPreference}</span>
               <IonIcon icon={chevronDownOutline} />
@@ -295,21 +298,13 @@ const SettingsPage: React.FC = () => {
           </div>
           {renderDropdown('dataPref')}
 
-          <button className="settings-row-link settings-row-link-danger">
+          <button className="settings-row-link settings-row-link-danger" type="button">
             Reset all hidden workouts
           </button>
 
-          <button className="settings-row-link settings-row-link-danger">
+          <button className="settings-row-link settings-row-link-danger" type="button">
             Delete account
           </button>
-
-          <button className="settings-row-link settings-row-link-danger" onClick={() => {
-            // DEBUG: navigate to navigation page
-            window.location.href = '/navigation';
-          }}>
-            DEBUG: see navigation page
-          </button>
-
         </section>
       </IonContent>
     </IonPage>
