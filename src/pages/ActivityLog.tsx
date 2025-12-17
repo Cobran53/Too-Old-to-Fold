@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonList, IonItem, IonLabel, IonSpinner } from '@ionic/react';
-import { openDb } from '../services/sqlite';
+// SQLite disabled — ActivityLog will show no records until DB is restored
 
 type ActivityRow = {
   id: number;
@@ -19,15 +19,8 @@ const ActivityLog: React.FC = () => {
   async function load() {
     setLoading(true);
     try {
-      const db = await openDb();
-      if (!db) {
-        setRows([]);
-        setLoading(false);
-        return;
-      }
-      const res = await db.all('SELECT id, avg_speed, gyro_movement, steps, latitude, longitude, timestamp FROM activity_log ORDER BY timestamp DESC LIMIT 200');
-      if (typeof db.close === 'function') await db.close();
-      setRows(res || []);
+      console.log('[ActivityLog] load skipped: sqlite disabled');
+      setRows([]);
     } catch (e) {
       console.error('Failed to load activity_log', e);
       setRows([]);

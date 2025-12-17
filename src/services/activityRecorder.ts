@@ -1,4 +1,4 @@
-import { openDb } from './sqlite';
+// SQLite disabled for now — database calls removed.
 
 type Coord = { latitude: number | null; longitude: number | null };
 
@@ -117,15 +117,16 @@ async function persistRecord() {
     const lon = lastCoords.longitude;
     const now = new Date();
     const dayOfWeek = now.toLocaleString(undefined, { weekday: 'long' });
-
-    const db = await openDb();
-    if (!db) return;
-
-    await db.run(
-      'INSERT INTO activity_log (avg_speed, gyro_movement, steps, latitude, longitude, timestamp, day_of_week) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [avgSpeed, gyroMovement, stepsDelta, lat, lon, now.toISOString(), dayOfWeek]
-    );
-    if (typeof db.close === 'function') await db.close();
+    // DB disabled: log the sample instead of persisting
+    console.log('[activityRecorder] persistRecord (db disabled) ->', {
+      avgSpeed,
+      gyroMovement,
+      stepsDelta,
+      lat,
+      lon,
+      timestamp: now.toISOString(),
+      dayOfWeek,
+    });
 
     // reset samples
     speedSamples = [];
@@ -141,7 +142,7 @@ export async function startActivityRecorder(opts?: { sampleIntervalMs?: number; 
   isRunning = true;
 
   const sampleIntervalMs = opts?.sampleIntervalMs ?? 5000; // sample sensors every 5s
-  const recordIntervalMs = opts?.recordIntervalMs ?? 15 * 60 * 1000; // default 15 minutes
+  const recordIntervalMs = opts?.recordIntervalMs ?? 1 * 60 * 1000; // default 1 minute
 
   // Initialize Android-specific plugins (Geolocation, pedometer, device-motion)
   await initPedometerAndroid();
@@ -235,6 +236,11 @@ export async function startActivityRecorder(opts?: { sampleIntervalMs?: number; 
       persistRecord().catch(() => {});
     } catch (e) {}
   }, Math.min(5000, recordIntervalMs));
+
+  // DB disabled: skip inserting dummy records
+  (async function insertDummyIfEmpty() {
+    console.log('[activityRecorder] insertDummyIfEmpty skipped: sqlite disabled');
+  })();
 }
 
 export function stopActivityRecorder() {

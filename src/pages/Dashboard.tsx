@@ -56,15 +56,16 @@ const Dashboard: React.FC = () => {
     setDatesToDisplay(days);
   }, []);
 
-  const { workouts, isLoading } = useWorkouts({// No criteria for now
+  const { workouts, isLoading } = useWorkouts({
+    count: 2,
   });
-  console.log('Filtered Workouts:', workouts);  
+  console.log('[Dashboard] Filtered Workouts:', workouts);  
   
 
   const handleDateClick = (date: Date) => {
     const newSelectedKey = getDateKey(date);
     setSelectedDateKey(newSelectedKey);
-    console.log(`Date selected: ${newSelectedKey}`);
+    console.log(`[Dashboard] Date selected: ${newSelectedKey}`);
   };
 
   return (
@@ -155,19 +156,16 @@ const Dashboard: React.FC = () => {
             {isLoading ? (
                 <p>Loading workouts...</p>
             ) : (
-                [...workouts]
-                  .sort(() => Math.random() - 0.5)
-                  .slice(0, 2)
-                  .map((workout) => (
-                    <MiniWorkoutCard
-                      key={workout.id}
-                      title={workout.name}
-                      time={workout.duration_minutes + " mins"}
-                      description={workout.description}
-                      imageSrc={workout.link_to_image || "https://picsum.photos/seed/workout/100/100"}
-                      imageAlt={workout.name}
-                    />
-                  ))
+                (workouts.slice(0, 2)).map((workout) => (
+                  <MiniWorkoutCard
+                    key={workout.id}
+                    title={workout.name}
+                    time={workout.duration_minutes + " mins"}
+                    description={workout.description}
+                    imageSrc={workout.link_to_image || "https://picsum.photos/seed/workout/100/100"}
+                    imageAlt={workout.name}
+                  />
+                ))
             )}
           </div>
         </section>

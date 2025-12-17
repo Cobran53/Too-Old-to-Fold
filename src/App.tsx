@@ -10,7 +10,7 @@ import Progress from './pages/Progress';
 import SettingsPage from './pages/SettingsPage';
 import Calendar from './pages/Calendar';
 import ActivityLog from './pages/ActivityLog';
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { initDatabase } from './services/initDatabase';
 import { startActivityRecorder, stopActivityRecorder } from './services/activityRecorder';
 
@@ -40,23 +40,29 @@ import './App.css';
 setupIonicReact();
 
 const App: React.FC = () => {
+  const [dbReady, setDbReady] = useState<boolean>(false);
+
   useEffect(() => {
     let cancelled = false;
 
     (async () => {
       try {
         await initDatabase();
+        console.log('[App] initDatabase succeeded');
       } catch (e) {
-        console.error('initDatabase failed', e);
+        console.error('[App] initDatabase failed', e);
       }
 
       if (cancelled) return;
 
       try {
         await startActivityRecorder();
+        console.log('[App] startActivityRecorder succeeded');
       } catch (e) {
-        console.error('startActivityRecorder failed', e);
+        console.error('[App] startActivityRecorder failed', e);
       }
+
+      setDbReady(true);
     })();
 
     return () => {
@@ -67,9 +73,10 @@ const App: React.FC = () => {
 
   return (
     <IonApp>
-      <IonReactRouter>
-        <IonTabs>
-          <IonRouterOutlet>
+      {dbReady ? (
+        <IonReactRouter>
+          <IonTabs>
+            <IonRouterOutlet>
             {/* Start / navigation flow */}
             <Route exact path="/navigation">
               <Navigation />
@@ -107,9 +114,12 @@ const App: React.FC = () => {
             <Route exact path="/activity-log">
               <ActivityLog />
             </Route>
-          </IonRouterOutlet>
-        </IonTabs>
-      </IonReactRouter>
+              </IonRouterOutlet>
+            </IonTabs>
+        </IonReactRouter>
+      ) : (
+        <div style={{padding:20}}>Loading application...</div>
+      )}
     </IonApp>
   );
 };

@@ -15,13 +15,13 @@ if (!fs.existsSync(dbDir)) {
 }
 
 if (fs.existsSync(dbFile)) {
-  console.log('Database already exists:', dbFile);
+  console.log('[initDB] Database already exists:', dbFile);
   process.exit(0);
 }
 
 const schemaPath = path.join(dbDir, 'schema.sql');
 if (!fs.existsSync(schemaPath)) {
-  console.error('schema.sql not found in db/ — create db/schema.sql first');
+  console.error('[initDB] schema.sql not found in db/ — create db/schema.sql first');
   process.exit(1);
 }
 
@@ -34,21 +34,21 @@ if (fs.existsSync(seedJsonPath)) {
   try {
     seedData = JSON.parse(fs.readFileSync(seedJsonPath, 'utf8'));
   } catch (e) {
-    console.error('Failed to parse workouts.json seed file:', e.message);
+    console.error('[initDB] Failed to parse workouts.json seed file:', e.message);
   }
 } else {
-  console.warn('No workouts.json seed file found at', seedJsonPath);
+  console.warn('[initDB] No workouts.json seed file found at', seedJsonPath);
 }
 
 const db = new sqlite3.Database(dbFile, (err) => {
   if (err) {
-    console.error('Error creating DB:', err.message);
+    console.error('[initDB] Error creating DB:', err.message);
     process.exit(1);
   }
-  console.log('Database created:', dbFile);
+  console.log('[initDB] Database created:', dbFile);
   db.exec(schemaSql, (err) => {
     if (err) {
-      console.error('Error executing schema.sql:', err.message);
+      console.error('[initDB] Error executing schema.sql:', err.message);
       db.close();
       process.exit(1);
     }
@@ -72,12 +72,12 @@ const db = new sqlite3.Database(dbFile, (err) => {
         stmt.run(title, duration, JSON.stringify(metadata));
       }
       stmt.finalize((err) => {
-        if (err) console.error('Seed error:', err.message);
-        else console.log('Initial seed done from workouts.json.');
+        if (err) console.error('[initDB] Seed error:', err.message);
+        else console.log('[initDB] Initial seed done from workouts.json.');
         db.close();
       });
     } else {
-      console.log('No seed data available; skipping initial seed.');
+      console.log('[initDB] No seed data available; skipping initial seed.');
       db.close();
     }
   });
