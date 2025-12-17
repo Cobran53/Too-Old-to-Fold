@@ -9,8 +9,10 @@ import TrainingListPage from './pages/TrainingListPage';
 import Progress from './pages/Progress';
 import SettingsPage from './pages/SettingsPage';
 import Calendar from './pages/Calendar';
+import ActivityLog from './pages/ActivityLog';
 import { useEffect } from 'react';
 import { initDatabase } from './services/initDatabase';
+import { startActivityRecorder, stopActivityRecorder } from './services/activityRecorder';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -40,6 +42,11 @@ setupIonicReact();
 const App: React.FC = () => {
   useEffect(() => {
     initDatabase();
+    // Démarre l'enregistrement d'activité périodique (échantillonnage et insertion toutes les 15 minutes)
+    startActivityRecorder().catch(e => console.error('startActivityRecorder failed', e));
+    return () => {
+      stopActivityRecorder();
+    };
   }, []);
 
   return (
@@ -79,6 +86,10 @@ const App: React.FC = () => {
 
             <Route exact path="/calendar">
               <Calendar />
+            </Route>
+
+            <Route exact path="/activity-log">
+              <ActivityLog />
             </Route>
           </IonRouterOutlet>
         </IonTabs>

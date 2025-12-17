@@ -25,6 +25,18 @@ const Navigation: React.FC = () => {
         <IonRouterLink className="btn-get-started" routerLink="/progress"> 
           Progress Page
         </IonRouterLink>
+        <IonRouterLink className="btn-get-started" routerLink="/training-list">
+          Training List Page
+        </IonRouterLink>
+        <IonRouterLink className="btn-get-started" routerLink="/settings">
+          Settings Page
+        </IonRouterLink>
+        <IonRouterLink className="btn-get-started" routerLink="/calendar">
+          Calendar Page
+        </IonRouterLink>
+        <IonRouterLink className="btn-get-started" routerLink="/activity-log">
+          Activity Log Page
+        </IonRouterLink>
       </IonContent>
     </IonPage>
   );

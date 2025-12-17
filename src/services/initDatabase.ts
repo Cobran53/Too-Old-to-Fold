@@ -6,7 +6,7 @@ export async function initDatabase() {
   const db = await openDb();
   if (!db) return;
 
-  // Découpe le schéma en commandes individuelles (ignore les lignes vides et commentaires)
+  // Cut the schema into individual statements (ignore empty lines and comments)
   const statements = schemaSql
     .split(';')
     .map(s => s.trim())
@@ -26,9 +26,9 @@ export async function initDatabase() {
   // Vérifie s'il y a déjà des données
   let workouts = [];
   try {
-    workouts = await db.all('SELECT COUNT(*) as count FROM workouts');
+    workouts = await db.all('SELECT COUNT(*) as count FROM workouts', []);
   } catch (e) {
-    console.error('Erreur lors du SELECT COUNT sur workouts:', e);
+    console.error('Error while doing SELECT COUNT on workouts:', e);
     await db.close();
     return;
   }
