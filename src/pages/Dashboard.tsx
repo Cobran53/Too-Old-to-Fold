@@ -33,7 +33,6 @@ const getDateKey = (date: Date): string => {
 };
 
 const Dashboard: React.FC = () => {
-  // vald dag (default: idag)
   const [selectedDateKey, setSelectedDateKey] = useState(getDateKey(new Date()));
   const [datesToDisplay, setDatesToDisplay] = useState<Date[]>([]);
   const ionRouter = useIonRouter();
@@ -42,11 +41,9 @@ const Dashboard: React.FC = () => {
     const today = new Date();
     const days: Date[] = [];
 
-    // start: 3 dagar innan idag
     const startDate = new Date(today);
     startDate.setDate(today.getDate() - 3);
 
-    // 11 dagar: 3 före, idag, 7 efter
     for (let i = 0; i < 11; i++) {
       const nextDay = new Date(startDate);
       nextDay.setDate(startDate.getDate() + i);
@@ -125,7 +122,6 @@ const Dashboard: React.FC = () => {
       </IonHeader>
 
       <IonContent fullscreen className="ion-padding dashboard-content">
-        {/* Datumraden */}
         <section className="date-picker-section">
           <div className="date-picker">
             {datesToDisplay.map((date) => {
@@ -139,10 +135,7 @@ const Dashboard: React.FC = () => {
                   key={dateKey}
                   className={`day-card ${isActive ? 'active' : 'inactive'}`}
                   onClick={() => {
-                        // 1. First, update the selected date (always)
                         handleDateClick(date); 
-                        
-                        // 2. Then, if the clicked date is the currently selected (active) one, navigate
                         if (isActive) {
                             ionRouter.push('/calendar');
                         }
@@ -166,7 +159,6 @@ const Dashboard: React.FC = () => {
           </div>
         </section>
 
-        {/* Today's Plan */}
         <section className="todays-plan">
           <h3 className="section-title">
             {selectedDateKey === getDateKey(new Date())
@@ -206,7 +198,6 @@ const Dashboard: React.FC = () => {
           </div>
         </section>
 
-        {/* Weekly Goals */}
         <section className="weekly-goals">
           <h3 className="section-title">Weekly Goals</h3>
 

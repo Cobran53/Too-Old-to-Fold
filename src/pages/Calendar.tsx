@@ -16,12 +16,10 @@ const Calendar: React.FC = () => {
   return (
     <IonPage className="statsPage">
       <IonContent fullscreen>
-        {/* --- Calendar Section (beige bakgrund) --- */}
         <div className="calendarContainer">
           <IonHeader className="ion-no-border headerTransparent">
             <IonToolbar>
               <IonButtons slot="start">
-                {/* Tillbaka till dashboard/home */}
                 <IonButton
                   fill="clear"
                   color="light"
@@ -41,13 +39,11 @@ const Calendar: React.FC = () => {
             </IonToolbar>
           </IonHeader>
 
-          {/* Datumtext */}
           <div className="dateInfo">
             <p>Wednesday</p>
             <h1>12 December</h1>
           </div>
 
-          {/* Kalendern (datumrutorna) */}
           <div className="calendarGrid">
             <div className="day">1</div>
             <div className="day">2</div>
@@ -86,7 +82,6 @@ const Calendar: React.FC = () => {
             <div className="day">31</div>
           </div>
 
-          {/* Veckodagar längst ned, enligt Figma (Sat → Fri) */}
           <div className="dayLabels">
             <span>Sat</span>
             <span>Sun</span>
@@ -98,7 +93,6 @@ const Calendar: React.FC = () => {
           </div>
         </div>
 
-        {/* --- My Stats (mörkblå del) --- */}
         <div className="statsContainer">
           <h2 className="statsTitle">My Stats</h2>
           <div className="statsGrid">
