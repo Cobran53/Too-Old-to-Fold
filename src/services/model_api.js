@@ -34,16 +34,12 @@ export async function predict(features) {
   const m = await loadModel();
 
   const inputTensor = tf.tensor(features, [1, 1, 561], 'float32');
-
-  // DO NOT specify output names when Identity is exposed
   const output = await m.executeAsync({
     [model.inputs[0].name]: inputTensor
   });
 
-  // output can be Tensor OR array of Tensors
   const outTensor = Array.isArray(output) ? output[0] : output;
   const probs = Array.from(await outTensor.data());
-
   const maxIdx = probs.indexOf(Math.max(...probs));
 
   return {

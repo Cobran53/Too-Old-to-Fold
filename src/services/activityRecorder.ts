@@ -1,6 +1,3 @@
-// Minimal activity recorder — happy path only
-// Uses only: @capacitor/geolocation, @capgo/capacitor-pedometer, @capacitor/motion
-
 import { open as dbOpen, run as dbRun, close as dbClose } from './sqlite';
 let positionInterval: any = null;
 let recordInterval: any = null;
@@ -22,12 +19,11 @@ async function persistRecord() {
   const now = new Date();
   
   console.log('[activityRecorder] sample', { avgSpeed, gyroMovement, stepsDelta, lat: lastCoords.latitude, lon: lastCoords.longitude, timestamp: now.toISOString() });
-  // reset
+
   speedSamples = [];
   gyroSamples = [];
   lastRecordedSteps = stepsCounter;
-  
-  // persist into activity_log
+
   try {
     const avg = (avgSpeed === null || isNaN(avgSpeed as any)) ? null : Number(avgSpeed);
     const gyro = (gyroMovement === null || isNaN(gyroMovement as any)) ? null : Number(gyroMovement);
@@ -35,7 +31,6 @@ async function persistRecord() {
     const lat = (lastCoords.latitude === null || lastCoords.latitude === undefined) ? null : Number(lastCoords.latitude);
     const lon = (lastCoords.longitude === null || lastCoords.longitude === undefined) ? null : Number(lastCoords.longitude);
 
-    // Open DB, insert, then close to avoid keeping connection open
     try {
       await dbOpen('appdb');
       const insertSql = `INSERT INTO activity_log (avg_speed, gyro_movement, steps, latitude, longitude, timestamp) VALUES (${avg === null ? 'NULL' : avg}, ${gyro === null ? 'NULL' : gyro}, ${steps === null ? 'NULL' : steps}, ${lat === null ? 'NULL' : lat}, ${lon === null ? 'NULL' : lon}, '${timestamp}');`;
@@ -55,13 +50,10 @@ export async function startActivityRecorder(opts?: { sampleIntervalMs?: number; 
   const sampleIntervalMs = opts?.sampleIntervalMs ?? 5000;
   const recordIntervalMs = opts?.recordIntervalMs ?? 60 * 1000;
 
-  // Happy-path: load the three plugins and attach listeners
   const geoMod: any = await import('@capacitor/geolocation');
   const { Geolocation } = geoMod;
-  // Request location permission up front
   try {
     const permRes: any = await Geolocation.requestPermissions();
-    // permRes may be { location: 'granted'|'denied' } or similar
     const locStatus = permRes && (permRes.location || permRes.locationAlways || permRes.locationWhenInUse);
     if (locStatus && String(locStatus).toLowerCase() === 'denied') {
       console.warn('[activityRecorder] location permission denied — aborting start');
@@ -69,7 +61,6 @@ export async function startActivityRecorder(opts?: { sampleIntervalMs?: number; 
       return;
     }
   } catch (e) {
-    // If requesting permissions failed, log and continue — the plugin may prompt later
     console.warn('[activityRecorder] Geolocation.requestPermissions failed', e);
   }
   const pedMod: any = await import('@capgo/capacitor-pedometer');
@@ -77,7 +68,6 @@ export async function startActivityRecorder(opts?: { sampleIntervalMs?: number; 
   const motionMod: any = await import('@capacitor/motion');
   const Motion = motionMod && (motionMod.Motion || motionMod.default || motionMod);
 
-  // On Android we should also request activity recognition permission for pedometer
   try {
     const capCore: any = await import('@capacitor/core');
     const platform = capCore && capCore.Capacitor && capCore.Capacitor.getPlatform && capCore.Capacitor.getPlatform();
@@ -85,7 +75,6 @@ export async function startActivityRecorder(opts?: { sampleIntervalMs?: number; 
       const Permissions: any = capCore && capCore.Permissions;
       if (Permissions && typeof Permissions.request === 'function') {
         try {
-          // best-effort request for activity recognition
           await Permissions.request({ name: 'android.permission.ACTIVITY_RECOGNITION' });
         } catch (e) {
           // ignore failures — plugin may still work or app can prompt later
@@ -97,14 +86,12 @@ export async function startActivityRecorder(opts?: { sampleIntervalMs?: number; 
     // ignore import errors
   }
 
-  // pedometer (happy path uses addListener 'measurement')
   if (Pedometer && typeof Pedometer.addListener === 'function') {
     pedometerListener = await Pedometer.addListener('measurement', (data: any) => {
       if (data && typeof data.numberOfSteps === 'number') stepsCounter = data.numberOfSteps;
     });
   }
 
-  // motion (happy path uses 'accel')
   if (Motion && typeof Motion.addListener === 'function') {
     motionListener = await Motion.addListener('accel', (ev: any) => {
       const r = ev.rotationRate || ev.rotation || ev;
@@ -117,7 +104,6 @@ export async function startActivityRecorder(opts?: { sampleIntervalMs?: number; 
     });
   }
 
-  // periodic position/speed sampling
   positionInterval = setInterval(async () => {
     const pos = await Geolocation.getCurrentPosition({ enableHighAccuracy: true, maximumAge: 0 });
     if (pos && pos.coords) {
@@ -130,13 +116,10 @@ export async function startActivityRecorder(opts?: { sampleIntervalMs?: number; 
     }
   }, sampleIntervalMs);
 
-
-  // schedule persistence
   recordInterval = setInterval(() => {
     void persistRecord();
   }, recordIntervalMs);
 
-  // initial quick persist
   setTimeout(() => { void persistRecord(); }, Math.min(5000, recordIntervalMs));
 }
 

@@ -5,8 +5,6 @@ function escapeSqlString(s: string): string {
 	return s.replace(/'/g, "''");
 }
 
-// Insert seed workouts into the currently-open database.
-// Assumes the caller has already opened the DB.
 export async function seedWorkouts(items: any[]): Promise<void> {
 	if (!items || items.length === 0) return;
 
@@ -35,7 +33,6 @@ export async function initDatabase(): Promise<void> {
 	try {
 		await dbOpen(DB);
 
-		// Ensure table exists (minimal schema matching scripts/init_db.js)
 		const createSql = `CREATE TABLE IF NOT EXISTS workouts (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			title TEXT NOT NULL,
@@ -54,7 +51,6 @@ export async function initDatabase(): Promise<void> {
 		);`;
 		await dbRun(createDayWorkoutsSql);
 
-		// Ensure activity_log table exists for periodic activity samples
 		const createActivityLogSql = `CREATE TABLE IF NOT EXISTS activity_log (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			avg_speed REAL,
@@ -68,7 +64,6 @@ export async function initDatabase(): Promise<void> {
 		);`;
 		await dbRun(createActivityLogSql);
 
-		// Insert rows from JSON seed (if any)
 		const items = (workoutsJson && (workoutsJson as any).workouts) ? (workoutsJson as any).workouts : [];
 		
 		var noWorkouts = false;
@@ -76,19 +71,16 @@ export async function initDatabase(): Promise<void> {
 			noWorkouts = true;
 		}
 		
-    	// Check if the database already contains workouts
 		const existingWorkouts = await dbRun('SELECT COUNT(*) as count FROM workouts;');
 		if (existingWorkouts[0]?.count > 0) {
 			noWorkouts = true;
 		}
 		if (!noWorkouts) {
-			// Build a single statement with escaped literals
 			await seedWorkouts(items).catch(async (err) => {
 				console.error('Error seeding workouts:', err);
 			});
 		}
 
-		// For each day in the previous 7 and next 30 days, assign 2 random workouts
 		var noDayWorkouts = false;
 		const existingDayWorkouts = await dbRun('SELECT COUNT(*) as count FROM dayWorkouts;');
 		if (existingDayWorkouts[0]?.count > 0) {

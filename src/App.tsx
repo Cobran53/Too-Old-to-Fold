@@ -77,40 +77,30 @@ const App: React.FC = () => {
         <IonReactRouter>
           <IonTabs>
             <IonRouterOutlet>
-            {/* Start / navigation flow */}
             <Route exact path="/navigation">
               <Navigation />
             </Route>
-
             <Route exact path="/welcome">
               <Welcome />
             </Route>
-
             <Route exact path="/">
               <Redirect to="/welcome" />
             </Route>
-
-            {/* Huvudsidor */}
             <Route exact path="/dashboard">
               <Dashboard />
             </Route>
             <Route exact path="/training-list">
               <TrainingListPage />
             </Route>
-
             <Route exact path="/progress">
               <Progress />
             </Route>
-
-            {/* Settings & Calendar */}
             <Route exact path="/settings">
               <SettingsPage />
             </Route>
-
             <Route exact path="/calendar">
               <Calendar />
             </Route>
-
             <Route exact path="/activity-log">
               <ActivityLog />
             </Route>
