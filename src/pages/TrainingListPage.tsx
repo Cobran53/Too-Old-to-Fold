@@ -39,8 +39,8 @@ type WorkoutLocation = 'outside' | 'inside';
 type Workout = {
   id: number;
   title: string;
-  duration: string;   // text som visas under titeln
-  minutes: number;    // ren siffra för filterlogik
+  duration: string;
+  minutes: number;
   tag: string;
   description: string;
   image: string;
@@ -104,7 +104,6 @@ const TrainingListPage: React.FC = () => {
     React.useState<Workout | null>(null);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
-  // Filterpanel-state
   const [isFilterOpen, setIsFilterOpen] = React.useState(false);
   const [locationFilter, setLocationFilter] =
     React.useState<'any' | WorkoutLocation>('any');
@@ -158,7 +157,6 @@ const TrainingListPage: React.FC = () => {
   return (
     <IonPage className="training-page">
       <IonContent fullscreen className="training-content">
-        {/* Top-rad med titel + filter-knapp */}
         <div className="training-top-row">
           <h1 className="training-title">Training</h1>
           <IonButton
@@ -171,7 +169,6 @@ const TrainingListPage: React.FC = () => {
           </IonButton>
         </div>
 
-        {/* Sökfält */}
         <IonSearchbar
           className="training-searchbar"
           placeholder="Find an exercise"
@@ -179,10 +176,9 @@ const TrainingListPage: React.FC = () => {
           onIonChange={(e) => setSearchText(e.detail.value ?? '')}
         />
 
-        {/* FILTERPANEL – visas när man klickat på filtret */}
         {isFilterOpen && (
           <div className="training-filter-panel">
-            {/* liten header i boxen */}
+            {/* small header in the box */}
             <div className="training-filter-header">
               <span className="filter-title">Filters</span>
               <button
@@ -194,9 +190,7 @@ const TrainingListPage: React.FC = () => {
               </button>
             </div>
 
-            {/* rad med filter-pills */}
             <div className="training-filter-pill-row">
-              {/* Outside / Inside styr locationFilter */}
               <button
                 className={`filter-pill ${
                   locationFilter === 'outside' ? 'active' : ''
@@ -225,7 +219,6 @@ const TrainingListPage: React.FC = () => {
                 <span>Inside</span>
               </button>
 
-              {/* Dessa tre styr activeFilter (typ) */}
               <button
                 className={`filter-pill ${
                   activeFilter === 'walking' ? 'active' : ''
@@ -269,7 +262,6 @@ const TrainingListPage: React.FC = () => {
               </button>
             </div>
 
-            {/* Duration-slider */}
             <div className="training-filter-range">
               <div className="filter-duration-chip">{avgDuration} min</div>
 
@@ -298,7 +290,6 @@ const TrainingListPage: React.FC = () => {
           </div>
         )}
 
-        {/* Segment / kategorier – snabbfilter */}
         <IonSegment
           value={activeFilter}
           onIonChange={(e) =>
@@ -320,13 +311,11 @@ const TrainingListPage: React.FC = () => {
             <IonLabel>Balance</IonLabel>
           </IonSegmentButton>
         </IonSegment>
-
-        {/* lite info om hur många träningar som matchar */}
+    
         <p className="training-results-info">
           Showing {filteredWorkouts.length} of {workouts.length} workouts
         </p>
 
-        {/* Lista med träningspass */}
         <IonList lines="none" className="training-list">
           {filteredWorkouts.map((workout) => (
             <IonCard
@@ -376,7 +365,6 @@ const TrainingListPage: React.FC = () => {
           )}
         </IonList>
 
-        {/* Modal för detaljer */}
         <IonModal isOpen={isModalOpen} onDidDismiss={closeDetails}>
           <IonContent className="ion-padding">
             {selectedWorkout && (

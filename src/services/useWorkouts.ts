@@ -37,13 +37,8 @@ interface WorkoutCriteria {
     count?: number;
 }
 
-/**
- * Filters the workout data based on optional category, location, and duration criteria.
- * @param criteria - An object containing filtering parameters.
- * @returns A promise resolving to the filtered list of Workouts.
- */
 const fetchFilteredWorkouts = async (criteria: WorkoutCriteria): Promise<Workout[]> => {
-    // Helper pour filtrer
+    // Helper for filtering
     const applyFilters = (items: Workout[]) => items.filter(workout => {
         if (criteria.category && workout.category !== criteria.category) return false;
         if (criteria.location) {
@@ -118,11 +113,6 @@ function mapRowToWorkout(title: string, duration: number, metadata: string): Wor
 
 // --- 4. THE REACT HOOK (Manages State and Calls Logic) ---
 
-/**
- * Custom hook to fetch and manage the list of workouts based on criteria.
- * @param criteria - The filters to apply to the workout list.
- * @returns The list of filtered workouts and loading state.
- */
 const useWorkouts = (criteria: WorkoutCriteria = {}) => {
     const [workouts, setWorkouts] = useState<Workout[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
