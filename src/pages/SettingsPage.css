@@ -1,4 +1,4 @@
-/* Telefonram / layout */
+
 .settings-page {
   --ion-background-color: #e8e8e8;
   /*width: 375px;
@@ -17,7 +17,7 @@
   background-color: #f3f3f3;
 }
 
-/* --- Header med svart topp och rundad botten --- */
+
 .settings-header {
   --background: transparent;
 }
@@ -59,7 +59,7 @@
   color: #ffffff;
 }
 
-/* --- Sektioner --- */
+
 
 .settings-section {
   margin-top: 24px;
@@ -79,7 +79,7 @@
   text-decoration: underline;
 }
 
-/* --- Rader & värden --- */
+
 
 .settings-row {
   display: flex;
@@ -97,7 +97,7 @@
   color: #333333;
 }
 
-/* Höger-värde ("30 min", "Push only", etc.) */
+
 .settings-row-value {
   display: flex;
   align-items: center;
@@ -115,7 +115,7 @@
   font-size: 14px;
 }
 
-/* Min temperature + +/- knappar */
+
 .settings-row-min-temp {
   align-items: center;
 }
@@ -143,7 +143,7 @@
   color: #555555;
 }
 
-/* --- Account-länkar (Reset / Delete) --- */
+
 
 .settings-row-link {
   width: 100%;
@@ -160,7 +160,7 @@
   color: #c0392b;
 }
 
-/* --- Inline dropdown under raderna --- */
+
 
 .settings-inline-options {
   margin: 4px 0 6px 0;

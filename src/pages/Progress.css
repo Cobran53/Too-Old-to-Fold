@@ -4,7 +4,7 @@
   --background-color: #e8e8e8;
 }
 
-/* Telefon-lådan */
+
 .progress-page {
   /*width: 375px;
   height: 812px; 
@@ -14,27 +14,27 @@
   font-family: 'Sanchez', Arial, sans-serif !important;
 }
 
-/* Bakgrund för just progress-sidan */
+
 .progress-page ion-content {
   --background: var(--background-color);
 }
 
-/* Dölj scrollbar inuti IonContent */
+
 .progress-page ion-content::part(scroll) {
-  padding-bottom: 110px;         /* så Cancel inte hamnar bakom tab-baren */
-  -ms-overflow-style: none;      /* IE/Edge */
-  scrollbar-width: none;         /* Firefox */
+  padding-bottom: 110px;         
+  -ms-overflow-style: none;      
+  scrollbar-width: none;         
 }
 
 .progress-page ion-content::part(scroll)::-webkit-scrollbar {
-  display: none;                 /* Chrome/Safari */
+  display: none;                 
 }
 
 .progress-inner {
   padding: 16px 16px 12px 16px;
 }
 
-/* HEADER */
+
 .progress-toolbar {
   --background: var(--background-color);
   --border-width: 0;
@@ -51,14 +51,14 @@
   color: #111;
 }
 
-/* GENERELLT CARD-UTSEENDE */
+
 .card {
   background: #ffffff;
   border-radius: 18px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
 }
 
-/* --- Target-kort (endast status) --- */
+
 .target-card {
   padding: 14px 16px 14px 16px;
   margin-bottom: 24px;
@@ -98,7 +98,7 @@
   margin: 0;
 }
 
-/* --- Sektioner och rubriker --- */
+
 .section-block {
   margin-top: 22px;
 }
@@ -117,7 +117,7 @@
   color: #111;
 }
 
-/* --- Weekly / Monthly – pill-knapp --- */
+
 .range-toggle {
   border: none;
   border-radius: 999px;
@@ -128,7 +128,7 @@
   cursor: pointer;
 }
 
-/* --- Diagramkort --- */
+
 .chart-card {
   padding: 16px 12px 14px 12px;
 }
@@ -145,7 +145,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  height: 100%;        /* så staplarna kan använda %-höjd */
+  height: 100%;        
 }
 
 .chart-bar {
@@ -168,7 +168,7 @@
   color: #999;
 }
 
-/* --- Latest activity --- */
+
 .see-more-button {
   border: none;
   background: transparent;
@@ -239,7 +239,7 @@
   --box-shadow: none;
 }
 
-/* Liten meny under kortet – alltid inom mobil-lådan */
+
 .activity-options {
   margin-top: 6px;
   margin-bottom: 6px;
@@ -257,7 +257,7 @@
   text-align: left;
   font-size: 13px;
   cursor: pointer;
-  color: #111;           /* ← lägg till den här */
+  color: #111;           
 }
 
 .activity-option-btn + .activity-option-btn {
@@ -265,6 +265,6 @@
 }
 
 .activity-option-btn.destructive {
-  color: #b00020;        /* den röda “Remove from history” */
+  color: #b00020;        
 }
 

@@ -1,4 +1,4 @@
-/* --- Samma färgpalett som dashboard --- */
+
 :root {
   --primary-dark: #2c2f43;
   --primary-blue: #455a73;
@@ -14,7 +14,7 @@ IonList {
   scrollbar-width: none;
 }
 
-/* --- Telefonram / layout --- */
+
 .training-page {
   --ion-background-color: #e8e8e8;
   /*width: 375px;
@@ -35,7 +35,7 @@ IonList {
 }
 
 
-/* --- Toprad: titel + filter --- */
+
 .training-top-row {
   display: flex;
   justify-content: space-between;
@@ -59,7 +59,7 @@ IonList {
   color: var(--primary-dark);
 }
 
-/* --- Searchbar: gör den tydlig --- */
+
 .training-searchbar {
   margin-top: 12px;
   margin-bottom: 10px;
@@ -73,24 +73,24 @@ IonList {
 }
 
 
-/* --- Segment / kategorier: tydligare text + mörkblå highlight --- */
-/* --- Segment / kategorier: tydligare text + mörkblå highlight --- */
+
+
 .training-segment {
   margin-bottom: 14px;
 
   width: 100%;
   --background: #ffffff;
-  --indicator-color: var(--primary-dark);   /* mörkblå underline */
+  --indicator-color: var(--primary-dark);   
   --indicator-height: 2px;
 
-  --color: #555555;                         /* inaktiv textfärg */
-  --color-checked: var(--primary-dark);     /* aktiv textfärg */
+  --color: #555555;                         
+  --color-checked: var(--primary-dark);     
 
   border-radius: 999px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
-/* segment-knapparna: dela på utrymmet och fixa färgerna hårdare */
+
 .training-segment ion-segment-button {
   text-transform: none;
   font-size: 13px;
@@ -101,33 +101,33 @@ IonList {
   min-width: 0;
   white-space: nowrap;
 
-  color: #555555 !important;               /* inaktiv textfärg */
+  color: #555555 !important;               
 }
 
-/* aktiv knapp – mörkblå text */
+
 .training-segment ion-segment-button.segment-button-checked {
   color: var(--primary-dark) !important;
 }
 
 
-/* --- Lista --- */
+
 .training-list {
   padding-top: 4px;
   background: transparent;
 
-  /* Hide the scrollbar for Webkit browsers (Chrome, Safari, etc.) */
+  
   &::-webkit-scrollbar {
     display: none;
   }
 
-  /* Hide the scrollbar for IE and Edge */
+  
   -ms-overflow-style: none;
 
-  /* Hide the scrollbar for Firefox */
+  
   scrollbar-width: none;
 }
 
-/* --- Kort --- */
+
 .training-card {
   border-radius: 16px;
   overflow: hidden;
@@ -179,7 +179,7 @@ IonList {
   color: #555555;
 }
 
-/* Footer/tag-rad */
+
 .training-card-footer {
   --inner-padding-end: 0;
   --background: transparent;
@@ -205,7 +205,7 @@ IonList {
   color: #ffffff;
 }
 
-/* ---------- FILTERPANEL ---------- */
+
 
 .training-filter-panel {
   margin-bottom: 14px;
@@ -215,7 +215,7 @@ IonList {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
-/* rad med pills */
+
 .training-filter-pill-row {
   display: flex;
   gap: 6px;
@@ -251,7 +251,7 @@ IonList {
   color: #ffffff;
 }
 
-/* duration-del */
+
 .training-filter-range {
   margin-top: 4px;
 }
@@ -266,7 +266,7 @@ IonList {
   font-size: 12px;
 }
 
-/* styling på själva range-komponenten */
+
 .training-filter-panel ion-range {
   --bar-background: #d2d2d7;
   --bar-background-active: #c2986d;
@@ -274,7 +274,7 @@ IonList {
   --knob-size: 18px;
 }
 
-/* min / max text under slidern */
+
 .filter-duration-bounds {
   display: flex;
   justify-content: space-between;
@@ -283,7 +283,7 @@ IonList {
   color: #555555;
 }
 
-/* header i filterpanelen */
+
 .training-filter-header {
   display: flex;
   justify-content: space-between;
@@ -306,14 +306,14 @@ IonList {
   cursor: pointer;
 }
 
-/* text under segmentet: "Showing X of Y..." */
+
 .training-results-info {
   margin: 4px 0 8px;
   font-size: 11px;
   color: #666666;
 }
 
-/* text när inga pass matchar */
+
 .training-empty-text {
   margin-top: 16px;
   font-size: 14px;

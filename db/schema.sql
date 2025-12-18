@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS workouts (
 
 CREATE INDEX IF NOT EXISTS idx_workouts_title ON workouts(title);
 
--- Table pour enregistrements d'activité périodiques (15 minutes)
+-- Table for periodic activity logs (15 minutes)
 CREATE TABLE IF NOT EXISTS activity_log (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   avg_speed REAL,

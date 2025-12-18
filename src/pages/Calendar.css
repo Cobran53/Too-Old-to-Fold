@@ -1,8 +1,8 @@
-/*TODO PUT BACK IN .CSS DOES NOT WORK*/
-/* Define custom colors */
+
+
 :root {
-  --cal-bg-color: #b19371; /* Beige/brown from image */
-  --stats-bg-color: #1c2b4a; /* Dark blue from image */
+  --cal-bg-color: #b19371; 
+  --stats-bg-color: #1c2b4a; 
   --text-light: #fff;
   --text-dark: #111;
 }
@@ -16,25 +16,25 @@
   font-family: 'Sanchez', Arial, sans-serif !important;
 }
 
- /* Base Page Setup */
+ 
 .statsPage ion-content {
-  --background: var(--stats-bg-color); /* Ensure the content area has the dark blue background */
+  --background: var(--stats-bg-color); 
 }
 
-/* --- Calendar Section --- */
+
 .calendarContainer {
   background: var(--cal-bg-color);
   color: var(--text-light);
   padding: 0 1rem;
   padding-bottom: 2rem;
-  /* Create the bottom rounded edge */
+  
   border-bottom-left-radius: 40px;
   border-bottom-right-radius: 40px;
   position: relative;
   z-index: 10;
 }
 
-/* Header/Toolbar styling */
+
 .headerTransparent ion-toolbar {
   --background: transparent;
   --border-width: 0;
@@ -46,7 +46,7 @@
   color: var(--text-light);
 }
 
-/* Streak Badge (Right corner circle) */
+
 .streakBadge {
   width: 55px;
   height: 55px;
@@ -57,11 +57,11 @@
   justify-content: center;
   align-items: center;
   font-weight: bold;
-  position: relative; /* Needed to position the flame */
+  position: relative; 
 }
 
 .flameIcon {
-  color: #ff9900; /* Orange/Yellow for flame */
+  color: #ff9900; 
   font-size: 1.2rem;
   position: absolute;
   top: 5px;
@@ -70,11 +70,11 @@
 
 .streakNumber {
   font-size: 1.5rem;
-  margin-left: 10px; /* Offset for the flame icon */
+  margin-left: 10px; 
   color: var(--text-light);
 }
 
-/* Date Info */
+
 .dateInfo {
   text-align: center;
   margin-top: -10px;
@@ -91,7 +91,7 @@
   margin: 5px 0 0 0;
 }
 
-/* Calendar Grid */
+
 .calendarGrid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -109,27 +109,27 @@
   align-items: center;
 }
 
-/* Completed Days (Colored Circles) */
+
 .completedDay {
   background: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
 }
 
-/* Current Streak (Darker Circles) */
+
 .currentStreak {
   background: var(--stats-bg-color);
   color: var(--text-light);
   font-weight: 600;
 }
 
-/* Current Day (Underline) */
+
 .currentDay {
   text-decoration: underline;
   text-underline-offset: 5px;
   text-decoration-thickness: 2px;
 }
 
-/* Day Labels (Sat, Sun, Mon...) */
+
 .dayLabels {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -140,7 +140,7 @@
   font-weight: 500;
 }
 
-/* --- My Stats Section --- */
+
 .statsContainer {
   background: var(--stats-bg-color);
   color: var(--text-light);
@@ -179,7 +179,7 @@
   opacity: 0.7;
 }
 
-/* Ensure iPhone bottom padding is handled */
+
 .statsPage ion-content::part(scroll) {
   padding-bottom: env(safe-area-inset-bottom);
 }
