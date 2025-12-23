@@ -2,24 +2,6 @@
 
 This directory contains all machine learning related components developed for the Too Old to Fold project. The work focuses on Human Activity Recognition (HAR) using a GRU-based neural network, along with preprocessing, inference, and deployment experiments.
 
-## Folder Structure
-```text
-ml/
-├── data/                       Dataset and related files (in .gitignore)
-├── models/
-│   ├── gru_har_model.py        GRU architecture definition
-│   ├── har_gru_model.keras     Trained Keras model
-│   ├── export_tflite.py        TFLite export attempt
-│   ├── verify_tflite.py        TFLite inspection script
-│   ├── verify_tflite_docker.py Docker-based TFLite verification
-│   ├── verify_savedmodel.py    TensorFlow SavedModel verification
-│   ├── test_model_api.js       Experimental TensorFlow.js test (not used)
-│   └── other test scripts
-├── preprocess.py               Feature extraction pipeline
-├── demo_predict.py             Example inference script
-└── train_har_gru.py            Model training script
-```
-
 ## Core Model and Training
 
 **gru_har_model.py**  
@@ -57,6 +39,24 @@ Implements feature extraction and preprocessing to generate the 561-dimensional 
 **api.py**
 
 The trained model is used through a backend API (FastAPI) that loads the TensorFlow SavedModel and exposes a /predict endpoint. This allows structured feature vectors to be sent from the application and activity predictions to be returned in a consistent format.
+
+## Folder Structure
+```text
+ml/
+├── data/                       Dataset and related files (in .gitignore)
+├── models/
+│   ├── gru_har_model.py        GRU architecture definition
+│   ├── har_gru_model.keras     Trained Keras model
+│   ├── export_tflite.py        TFLite export attempt
+│   ├── verify_tflite.py        TFLite inspection script
+│   ├── verify_tflite_docker.py Docker-based TFLite verification
+│   ├── verify_savedmodel.py    TensorFlow SavedModel verification
+│   ├── test_model_api.js       Experimental TensorFlow.js test (not used)
+│   └── other test scripts
+├── preprocess.py               Feature extraction pipeline
+├── demo_predict.py             Example inference script
+└── train_har_gru.py            Model training script
+```
 
 ## Notes on Usage
 
